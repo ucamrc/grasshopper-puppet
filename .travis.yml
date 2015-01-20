@@ -1,0 +1,32 @@
+branches:
+  only:
+    - master
+
+before_install:
+
+  # Install build-essential
+  - sudo apt-get install -y build-essential
+
+before_script:
+
+  # Create SSL certificates
+  - cd ~/build/Coenego/grasshopper-puppet/environments/qa/modules/localconfig/files/ssl/default
+  - openssl genrsa -des3 -out qa0.key 1024
+  - openssl req -new -key qa0.key -out qa0.csr
+  - openssl x509 -req -days 365 -in qa0.csr -signkey qa0.key -out qa0.crt
+
+  # Create virtual hosts
+  - sudo sed -i "2i127.0.0.2  qa0.timetable.grasshopper.com" /etc/hosts
+  - sudo sed -i "2i127.0.0.1  admin.qa0.timetable.grasshopper.com" /etc/hosts
+  - cat /etc/hosts
+
+script:
+
+  # Bounce all the Grasshopper dependencies
+  # - service apache restart
+  # - service postgresql restart
+
+  # Restart the Grasshopper service
+  # - service grasshopper restart
+
+  - exit 0

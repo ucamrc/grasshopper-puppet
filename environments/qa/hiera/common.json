@@ -1,0 +1,43 @@
+{
+    "classes": [],
+
+    /* Puppet node settings */
+    "nodesuffix": "%{nodesuffix}",
+    "nodetype": "%{nodetype}",
+
+    /* Generel Grasshopper application settings */
+    "app_os_user": "root",
+    "app_os_group": "root",
+
+    "app_cookie_secret": "SODIFJ984FJA984JAFP98WF4PAW984F984FJ9",
+    "app_root_dir": "/opt/grasshopper",
+    "app_hosts": [
+        "127.0.0.1",
+        "127.0.0.2"
+    ],
+
+    /* Grasshopper repository */
+    "app_ui_path": "/opt/grasshopper-ui",
+    "app_install_method": "git",
+    "app_install_config": {
+        "source": "https://github.com/CUL-DigitalServices/grasshopper.git",
+        "revision": "master"
+    },
+
+    /* Grasshopper UI repository */
+    "ui_root_dir": "/opt/grasshopper-ui",
+    "ui_install_method": "git",
+    "ui_install_config": {
+        "source": "https://github.com/CUL-DigitalServices/avocet-ui.git",
+        "revision": "master"
+    },
+
+    /* Node.JS version */
+    "ghservice::deps::package::nodejs::nodejs_version": "0.10.35-1nodesource1~trusty1",
+
+    /* Apache directives */
+    "ghservice::apache::version": "",
+
+    /* PostGres directives */
+    "ghservice::postgresql::version": ""
+}

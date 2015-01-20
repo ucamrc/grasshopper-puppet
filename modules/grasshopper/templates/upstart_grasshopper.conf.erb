@@ -1,0 +1,25 @@
+# Upstart script for the Node.JS Grasshopper app sever.
+description "start and stop Grasshopper"
+
+start on (local-filesystems and net-device-up IFACE=eth0)
+stop on shutdown
+
+# Restart the process if it dies with a signal
+# or exit code not given by the 'normal exit' stanza.
+# Give up if restart occurs 10 times in 90 seconds.
+respawn
+respawn limit 10 90
+
+# Upstart defaults to 1024 4096, increase it here
+limit nofile 32768 32768
+
+# The node app sometimes creates child processes.
+expect fork
+
+# Pass along some environment variables
+env NODE_ENV=production
+
+chdir <%= @app_root_dir %>
+script
+    exec /usr/bin/node app.js &
+end script
