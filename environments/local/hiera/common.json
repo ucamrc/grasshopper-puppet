@@ -1,0 +1,48 @@
+{
+    "classes": [
+        "::localconfig::ordering",
+        "::localconfig::hostnames",
+        "::ghservice::deps::common",
+        "::ghservice::apache",
+        "::ghservice::grasshopper",
+        "::ghservice::postgresql",
+        "::ghservice::ui"
+    ],
+
+    /* Local domain */
+    "web_domain": "timetable.vagrant.com",
+
+    /* Puppet node settings */
+    "nodesuffix": "%{nodesuffix}",
+    "nodetype": "%{nodetype}",
+
+    /* General Grasshopper application settings */
+    "app_os_user": "root",
+    "app_os_group": "root",
+
+    "app_cookie_secret": "SODIFJ984FJA984JAFP98WF4PAW984F984FJ9",
+    "app_root_dir": "/opt/grasshopper",
+    "app_hosts": [
+        "127.0.0.1",
+        "127.0.0.2"
+    ],
+
+    /* Grasshopper repository */
+    "app_ui_path": "/opt/grasshopper-ui",
+    "app_install_method": "vagrant",
+    "app_install_config": {},
+
+    /* Grasshopper UI repository */
+    "ui_root_dir": "/opt/grasshopper-ui",
+    "ui_install_method": "vagrant",
+    "ui_install_config": {},
+
+    /* Node.JS version */
+    "ghservice::deps::package::nodejs::nodejs_version": "0.10.35-1nodesource1~trusty1",
+
+    /* Apache directives */
+    "ghservice::apache::version": "",
+
+    /* PostGres directives */
+    "ghservice::postgresql::version": ""
+}
