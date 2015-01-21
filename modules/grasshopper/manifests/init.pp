@@ -20,6 +20,11 @@ class grasshopper (
     $config_cookie_secret,
     $config_servers_admin_host,
 
+    # DB
+    $config_db_name = hiera('ghservice::postgresql::db'),
+    $config_db_user = hiera('ghservice::postgresql::user'),
+    $config_db_pass = hiera('ghservice::postgresql::pass'),
+
     # UI
     $config_ui_path = '/opt/grasshopper-ui') {
 

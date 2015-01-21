@@ -34,9 +34,9 @@ var config = module.exports = {};
  * @see https://github.com/sequelize/sequelize/wiki/API-Reference-Sequelize#new-sequelize
  */
 config.db = {
-    'database': 'grasshopper',
-    'username': 'grasshopper',
-    'password': 'grasshopper',
+    'database': '<%= @config_db_name %>',
+    'username': '<%= @config_db_user %>',
+    'password': '<%= @config_db_pass %>',
     'port': 5432,
     'dropOnStartup': false
 };
