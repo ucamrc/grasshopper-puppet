@@ -1,0 +1,42 @@
+<VirtualHost *:80>
+# First VirtualHost block is default, catch random people browsing with wrong ServerName
+    <Directory />
+        Order Allow,Deny
+        Deny from All
+    </Directory>
+
+</VirtualHost>
+
+<VirtualHost *:80>
+    ServerAdmin admin@grasshopper.com
+    DocumentRoot /opt/grasshopper-ui/apps/timetable/ui
+    ServerName 2013.cam.timetable.grasshopper.com
+    ErrorLog /var/log/apache2/logstimetable_error.log
+    CustomLog /var/log/apache2/logstimetable_custom.log common
+
+    # Proxy api calls to the application server
+    ProxyPass /api http://localhost:2001/api
+    ProxyPassReverse /api http://localhost:2001/api
+    ProxyPreserveHost On
+
+    # Shared files
+    Alias /shared /opt/grasshopper-ui/shared
+
+    # QUnit tests
+    Alias /qunit /opt/grasshopper-ui/tests/qunit
+    <Directory /opt/grasshopper-ui/tests/qunit>
+        Options Indexes FollowSymLinks
+        Order Allow,Deny
+        Allow from All
+
+        RewriteEngine On
+        RewriteBase /qunit
+        RewriteRule ^api\.(.*)$ /opt/grasshopper-ui/tests/qunit/tests/api.$1.html
+    </Directory>
+
+    <Directory />
+        Order Allow,Deny
+        Allow from All
+    </Directory>
+
+</VirtualHost>

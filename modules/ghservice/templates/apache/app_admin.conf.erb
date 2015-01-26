@@ -1,0 +1,37 @@
+<VirtualHost 127.0.0.1:80>
+    ServerAdmin admin@grasshopper.com
+    DocumentRoot /opt/grasshopper-ui/apps/admin/ui
+    ServerName admin.grasshopper.com
+    ServerAlias admin.grasshopper.com
+    ErrorLog /var/log/apache2/logsadmin_error.log
+    CustomLog /var/log/apache2/logsadmin_custom.log common
+
+    # Proxy api calls to the application server
+    ProxyPass /api http://localhost:2000/api
+    ProxyPassReverse /api http://localhost:2000/api
+    ProxyPreserveHost On
+
+    # Shared files
+    Alias /shared /opt/grasshopper-ui/shared
+
+    # API docs
+    Alias /docs /opt/grasshopper-ui/docs
+
+    # QUnit tests
+    Alias /qunit /opt/grasshopper-ui/tests/qunit
+    <Directory /opt/grasshopper-ui/tests/qunit>
+        Options Indexes FollowSymLinks
+        Order Allow,Deny
+        Allow from All
+
+        RewriteEngine On
+        RewriteBase /qunit
+        RewriteRule ^api\.(.*)$ /opt/grasshopper-ui/tests/qunit/tests/api.$1.html
+    </Directory>
+
+    <Directory />
+        Order Allow,Deny
+        Allow from All
+    </Directory>
+
+</VirtualHost>
