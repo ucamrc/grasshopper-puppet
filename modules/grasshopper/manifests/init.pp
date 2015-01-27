@@ -64,9 +64,9 @@ class grasshopper (
     content =>  template('grasshopper/upstart_grasshopper.conf.erb'),
   }
 
-  ## service { 'grasshopper':
-  ##  ensure   => running,
-  ##  provider => 'upstart',
-  ##  require  => File['/etc/init/grasshopper.conf', "${app_root_dir}/config.js"]
-  ## }
+  service { 'grasshopper':
+    ensure   => running,
+    provider => 'upstart',
+    require  => File['/etc/init/grasshopper.conf', "${app_root_dir}/config.js"]
+  }
 }
