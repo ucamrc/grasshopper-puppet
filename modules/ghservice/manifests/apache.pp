@@ -7,6 +7,7 @@ class ghservice::apache {
     }
 
     class { '::apache::mod::proxy': }
+    class { '::apache::mod::proxy_http': }
     class { '::apache::mod::rewrite': }
 
 ### CHECK IF THIS IS THE RIGHT WAY TO DO THIS?
