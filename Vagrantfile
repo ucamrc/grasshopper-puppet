@@ -7,7 +7,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "grasshopper"
 
   # Forward http traffic
-  config.vm.network :forwarded_port, host: 8123, guest: 80
+  config.vm.network "private_network", ip: "192.168.56.123"
 
   # Share the back-end and front-end code with Vagrant.
   # It's assumed that grasshopper and grasshopper-ui are on the same level as grasshopper-puppet.

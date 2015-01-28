@@ -1,26 +1,33 @@
-<VirtualHost *:80>
-# First VirtualHost block is default, catch random people browsing with wrong ServerName
-    <Directory />
-        Order Allow,Deny
-        Deny from All
-    </Directory>
+# TODO sync with grasshopper-ui/blame/master/apps/timetable/apache/app.conf
 
-</VirtualHost>
+# TODO probably want this block back in production? (but in a separate file/ in the main apache2.conf), but for now allow random hosts to facilitate tenant testing
+#<VirtualHost *:80>
+# First VirtualHost block is default, catch random people browsing with wrong ServerName
+#    <Directory />
+#        Order Allow,Deny
+#        Deny from All
+#    </Directory>
+#
+#</VirtualHost>
 
 <VirtualHost *:80>
     ServerAdmin admin@grasshopper.com
     DocumentRoot /opt/grasshopper-ui/apps/timetable/ui
-    ServerName 2013.cam.timetable.grasshopper.com
+# Deliberately omit ServerName for now to allow tenant testing
+#    ServerName thingy.grasshopper.doodah
     ErrorLog /var/log/apache2/logstimetable_error.log
     CustomLog /var/log/apache2/logstimetable_custom.log common
 
     # Proxy api calls to the application server
-    ProxyPass /api http://localhost:2001/api
+    ProxyPass /api http://localhost:2001/api retry=0
     ProxyPassReverse /api http://localhost:2001/api
     ProxyPreserveHost On
 
     # Shared files
     Alias /shared /opt/grasshopper-ui/shared
+
+    # App files
+    Alias /apps /opt/grasshopper-ui/apps
 
     # QUnit tests
     Alias /qunit /opt/grasshopper-ui/tests/qunit
@@ -35,6 +42,7 @@
     </Directory>
 
     <Directory />
+# TODO add Raven or similar for externally visible servers esp before skinning
         Order Allow,Deny
         Allow from All
     </Directory>

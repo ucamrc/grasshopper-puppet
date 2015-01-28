@@ -1,6 +1,8 @@
 class ghservice::apache {
 
     class { '::apache': 
+        default_vhost => false,
+
 ## REDO THIS FROM UBUNTU VERSION ??
 ## or is standard one good enough (with the two mod enables below)
 ##        conf_template => 'ghservice/apache/httpd.conf.erb'
@@ -9,6 +11,8 @@ class ghservice::apache {
     class { '::apache::mod::proxy': }
     class { '::apache::mod::proxy_http': }
     class { '::apache::mod::rewrite': }
+
+    apache::listen { '80': }
 
 ### CHECK IF THIS IS THE RIGHT WAY TO DO THIS?
 
