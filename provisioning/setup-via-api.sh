@@ -17,13 +17,13 @@ curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}
 curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/tenants || exit 1;
 
 # CREATE TENANT
-curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/tenants -X POST -d 'displayName=mytenant' || exit 1;
+curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/tenants -X POST -d 'displayName=DevTenant' || exit 1;
 ### assume returns "id":1
 
 # CREATE APP (needs tenantId from above, change host param to match)
-curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/apps -X POST -d 'displayName=myapp&tenantId=1&host='$TENANTHOSTNAME'&type=timetable' || exit 1;
+curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/apps -X POST -d 'displayName=2014.dev.grasshopper&tenantId=1&host='$TENANTHOSTNAME'&type=timetable' || exit 1;
 ### assume returns "id":1
 
 # CREATE APP USER (needs appId from above)
-curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/users -X POST -d 'appId=1&displayName=TestUser&email=test&password=test' || exit 1;
+curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/users -X POST -d 'appId=1&displayName=TestUser&email=test@test.local&password=test' || exit 1;
 
