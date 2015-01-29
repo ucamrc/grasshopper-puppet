@@ -33,7 +33,11 @@ devserver$ sudo node /opt/grasshopper/etc/scripts/data/timetable-import.js -f ti
 devserver$ sudo start grasshopper
 
 ## TODO some of the above steps will be automated
-## NOTE: you may get errors about /usr/lib/update-notifier/apt-check ... nil, but these can be ignored?
+## NOTE: you may get some of the following warnings and errors, but these can safely be ignored:
+- Warning: Setting templatedir is deprecated ...
+- Could not retrieve fact='apt_updates'...
+- Could not retrieve fact='apt_security_updates'...
+(Last two pertain to /usr/lib/update-notifier/apt-check)
 ```
 
 ### Local machine / Vagrant
