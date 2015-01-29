@@ -21,7 +21,7 @@ devserver$ cd /opt/grasshopper-puppet
 # Edit common.json to make web_domain match your new server's hostname
 devserver$ sudo vim environments/dev/hiera/common.json
 # Copy some timetable data to import onto the server
-local$ scp timetabledata.json devserver.ontheinternet:/opt/grasshopper-puppet/
+local$ scp timetabledata.json devserver.ontheinternet:/tmp/timetabledata.json
 # Back to the server to run puppet
 devserver$ sudo ./provisioning/grasshopper/init.sh
 
@@ -29,7 +29,7 @@ devserver$ sudo ./provisioning/grasshopper/init.sh
 devserver$ sudo ./provisioning/setup-via-api.sh admin.devserver.ontheinternet devserver.ontheinternet
 devserver$ sudo stop grasshopper
 # This next step could take up to around 30mins if you have a slow server and lots of data!
-devserver$ sudo node /opt/grasshopper/etc/scripts/data/timetable-import.js -f timetabledata.json -a 1
+devserver$ sudo node /opt/grasshopper/etc/scripts/data/timetable-import.js -f /tmp/timetabledata.json -a 1
 devserver$ sudo start grasshopper
 
 ## TODO some of the above steps will be automated
