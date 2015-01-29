@@ -11,6 +11,8 @@ Puppet configuration and environment management for the Grasshopper event engine
 ### Dev Environment
 
 ```
+## TODO some of these steps will be automated
+
 # Provision an Ubuntu Trusty server (e.g. on EC2)
 # Then:
 local$ ssh devserver.ontheinternet
@@ -38,7 +40,12 @@ devserver$ sudo start grasshopper
 # You can monitor grasshopper's logs:
 devserver$ sudo tail -f /var/log/upstart/grasshopper.log
 
-## TODO some of the above steps will be automated
+## HANDY HINT, especially for EC2 users (and similar)
+## You may want to avoid changing your hostname - either get a static IP, or don't shutdown!
+## Otherwise reconfiguring the system with a new hostname might be fiddly
+## (Have not yet tested/audited how fiddly or whether puppet will fix it all;
+##  but for instance, the setup-via-api.sh script won't know how to rename an app etc)
+
 ## NOTE: you may get some of the following warnings and errors, but these can safely be ignored:
 - Warning: Setting templatedir is deprecated ...
 - Could not retrieve fact='apt_updates'...
