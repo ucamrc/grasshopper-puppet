@@ -8,7 +8,8 @@ if [ $STATUS_CODE -ne 0 ] ; then
     apt-get -y install git
 fi
 
-PROVIS_DIR=/vagrant/provisioning
+PUPPET_REPO_DIR=/vagrant
+PROVIS_DIR=${PUPPET_REPO_DIR}/provisioning
 
-${PROVIS_DIR}/common.sh /vagrant ${PROVIS_DIR}/vagrant/hiera.yaml local "Run vagrant ssh then:"
+${PROVIS_DIR}/common.sh ${PUPPET_REPO_DIR} ${PROVIS_DIR}/vagrant/hiera.yaml local "Run vagrant ssh then:"
 
