@@ -23,14 +23,19 @@ class ghservice::apache {
 
     $admin_servername = $admin_domain
 
-    file { '/etc/apache2/sites-enabled/app_admin.conf':
-        ensure  => file,
-        content => template('ghservice/apache/app_admin.conf.erb')
-    }
+    # VirtualHosts are loaded in alphabetical order
+    # Requests that do not match a specified ServerName directive
+    # get sent to the default VirtualHost, which is always the first one.
+    # See https://httpd.apache.org/docs/2.4/vhosts/examples.html
 
-    file { '/etc/apache2/sites-enabled/app_timetable.conf':
+    file { '/etc/apache2/sites-enabled/000-app_timetable.conf':
         ensure  => file,
         content => template('ghservice/apache/app_timetable.conf.erb')
+    }
+
+    file { '/etc/apache2/sites-enabled/100-app_admin.conf':
+        ensure  => file,
+        content => template('ghservice/apache/app_admin.conf.erb')
     }
 
 }

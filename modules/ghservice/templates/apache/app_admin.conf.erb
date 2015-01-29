@@ -30,8 +30,10 @@
     </Directory>
 
     <Directory />
-        Order Allow,Deny
-        Allow from All
+        AuthType basic
+        AuthName "Grasshopper Dev Server"
+        AuthUserFile /etc/apache2/dev_auth_file
+        Require valid-user
     </Directory>
 
 </VirtualHost>

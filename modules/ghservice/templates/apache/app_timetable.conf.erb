@@ -42,9 +42,11 @@
     </Directory>
 
     <Directory />
-# TODO add Raven or similar for externally visible servers esp before skinning
-        Order Allow,Deny
-        Allow from All
+# RETHINK THIS? this is for externally visible servers so that timetable data not mistaken for real - this is even before login (even with Shib)
+        AuthType basic
+        AuthName "Grasshopper Dev Server"
+        AuthUserFile /etc/apache2/dev_auth_file
+        Require valid-user
     </Directory>
 
 </VirtualHost>
