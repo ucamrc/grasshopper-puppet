@@ -24,7 +24,7 @@ devserver$ cd /opt/grasshopper-puppet
 devserver$ sudo vim environments/dev/hiera/common.json
 # Set username and password to protect externally visible server with play data in
 devserver$ sudo apt-get install apache2-utils
-devserver$ sudo htpasswd -bc /etc/apache2/dev_auth_file #username# #password#
+devserver$ sudo htpasswd -bc /opt/dev_auth_file #username# #password#
 # Copy some timetable data to import onto the server
 local$ scp timetabledata.json devserver.ontheinternet:/tmp/timetabledata.json
 # Back to the server to run puppet

@@ -32,7 +32,8 @@
     <Directory />
         AuthType basic
         AuthName "Grasshopper Dev Server"
-        AuthUserFile /etc/apache2/dev_auth_file
+# FIXME work out where best to put this file
+        AuthUserFile /opt/dev_auth_file
         Require valid-user
     </Directory>
 
