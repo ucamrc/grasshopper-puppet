@@ -1,0 +1,58 @@
+{
+    "classes": [
+        "::localconfig::ordering",
+        "::localconfig::hostnames",
+        "::ghservice::deps::common",
+        "::ghservice::apache",
+        "::ghservice::grasshopper",
+        "::ghservice::postgresql",
+        "::ghservice::ui"
+    ],
+
+    /* Server domain */
+    "web_domain": "ec2-nn-nn-nn-nn.eu-west-1.compute.amazonaws.com",
+
+    /* Puppet node settings */
+    "nodesuffix": "%{nodesuffix}",
+    "nodetype": "%{nodetype}",
+
+    /* General Grasshopper application settings */
+    "app_os_user": "root",
+    "app_os_group": "root",
+
+    "app_cookie_secret": "SODIFJ984FJA984JAFP98WF4PAW984F984FJ9",
+    "app_root_dir": "/opt/grasshopper",
+    "app_hosts": [
+        "127.0.0.1",
+        "127.0.0.2"
+    ],
+
+    /* Grasshopper repository */
+    "app_ui_path": "/opt/grasshopper-ui",
+    "app_install_method": "git",
+    "app_install_config": {
+        "source": "https://github.com/CUL-DigitalServices/grasshopper.git",
+        "revision": "master"
+    },
+
+    /* Grasshopper UI repository */
+    "ui_root_dir": "/opt/grasshopper-ui",
+    "ui_install_method": "git",
+    "ui_install_config": {
+        "source": "https://github.com/CUL-DigitalServices/grasshopper-ui.git",
+        "revision": "master"
+    },
+
+    /* Node.JS version */
+    "ghservice::deps::package::nodejs::nodejs_version": "0.10.35-1nodesource1~trusty1",
+
+    /* PostgreSQL settings */
+    "ghservice::postgresql::version": "",
+    "ghservice::postgresql::db": "grasshopper",
+    "ghservice::postgresql::user": "grasshopper",
+    "ghservice::postgresql::pass": "grasshopper",
+
+    /* Apache directives */
+    "ghservice::apache::version": ""
+
+}
