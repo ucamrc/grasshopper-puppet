@@ -8,6 +8,33 @@ Puppet configuration and environment management for the Grasshopper event engine
  * If you make changes to the backend code you will need to restart the app server. This can be done by ssh'ing into the client machine by running `service grasshopper restart`.
  * Even if you'd install all the components on your host OS, you would not be able to run the server as some of the npm modules are compiled during the provisioning step.
 
+### Dev Environment
+
+```
+# Provision an Ubuntu Trusty server (e.g. on EC2)
+# Then:
+local$ ssh devserver.ontheinternet
+devserver$ sudo apt-get update
+devserver$ sudo apt-get install git
+devserver$ sudo git clone git://github.com/CUL-DigitalServices/grasshopper-puppet /opt/grasshopper-puppet
+devserver$ cd /opt/grasshopper-puppet
+# Edit common.json to make web_domain match your new server's hostname
+devserver$ sudo vim environments/dev/hiera/common.json
+# Copy some timetable data to import onto the server
+local$ scp timetabledata.json devserver.ontheinternet:/opt/grasshopper-puppet/
+# Back to the server to run puppet
+devserver$ sudo provisioning/grasshopper/init.sh
+
+devserver$ sudo provisioning/setup-via-api.sh admin.devserver.ontheinternet devserver.ontheinternet
+devserver$ sudo stop grasshopper
+# This next step could take up to around 30mins if you have a slow server and lots of data!
+devserver$ sudo node /opt/grasshopper/etc/scripts/data/timetable-import.js -f timetabledata.json -a 1
+devserver$ sudo start grasshopper
+
+## TODO some of the above steps will be automated
+## NOTE: you may get errors about /usr/lib/update-notifier/apt-check ... nil, but these can be ignored?
+```
+
 ### Local machine / Vagrant
 
 It's possible to get Grasshopper up and running on your local machine using [Vagrant](http://www.vagrantup.com) by following these steps:
@@ -55,12 +82,14 @@ you can change this in the VagrantFile found in grasshopper/grasshopper-puppet.
 cd into the `grasshopper-puppet` directory and run:
 
 ```
-vagrant box add grashopper https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box
+vagrant box add grasshopper https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box
 vagrant up
 ```
 
 This command will pull down a VirtualBox image and deploy all the necessary components onto it.
 Depending on how fast your host machine and internet connection is, this can take quite a while. Initial set-ups of 30-45 minutes are not uncommon.
+
+(Note: this image already has puppet installed for convenience, though it will probably be an older version (3.4) than the puppet installed in the non-vagrant environments)
 
 Once that is done you should have a VM with a fully functioning environment.
 Open your browser and go to http://admin.vagrant.com and you should be presented with the Admin UI.
