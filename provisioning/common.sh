@@ -3,7 +3,7 @@
 PUPPET_REPO_DIR=$1
 PUPPET_HIERA=$2
 PUPPET_ENV=$3
-ERROR_PREFIX=$4
+MANUALRUN_PREFIX=$4
 
 cd ${PUPPET_REPO_DIR}
 
@@ -39,11 +39,15 @@ STATUS_CODE=$?
 if [ $STATUS_CODE -ne 0 ] ; then
     echo "Got a ${STATUS_CODE} status code, which indicates the puppet catalog could not be properly applied."
     echo "There are a couple of possible things you can do:"
-    echo " - "${ERROR_PREFIX}
+    echo " - "${MANUALRUN_PREFIX}
     echo "   cd ${PUPPET_REPO_DIR} && sudo ${PUPPET_CMD}"
     echo " - If you're familiar with puppet try to analyze the output and tweak the puppet scripts"
     echo "Since puppet didn't finish properly, we have to abort here"
     exit 1;
 fi
+
+echo "Success. To re-apply puppet catalog manually:"
+echo " - "${MANUALRUN_PREFIX}
+echo "   cd ${PUPPET_REPO_DIR} && sudo ${PUPPET_CMD}"
 
 exit 0;
