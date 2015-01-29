@@ -20,17 +20,23 @@ devserver$ sudo git clone git://github.com/CUL-DigitalServices/grasshopper-puppe
 devserver$ cd /opt/grasshopper-puppet
 # Edit common.json to make web_domain match your new server's hostname
 devserver$ sudo vim environments/dev/hiera/common.json
+# Set username and password to protect externally visible server with play data in
+devserver$ sudo apt-get install apache2-utils
+devserver$ sudo htpasswd -bc /etc/apache2/dev_auth_file #username# #password#
 # Copy some timetable data to import onto the server
 local$ scp timetabledata.json devserver.ontheinternet:/tmp/timetabledata.json
 # Back to the server to run puppet
 devserver$ sudo ./provisioning/grasshopper/init.sh
 
 # Now we have a server, put some data in it:
-devserver$ sudo ./provisioning/setup-via-api.sh admin.devserver.ontheinternet devserver.ontheinternet
+devserver$ ./provisioning/setup-via-api.sh admin.devserver.ontheinternet devserver.ontheinternet
 devserver$ sudo stop grasshopper
 # This next step could take up to around 30mins if you have a slow server and lots of data!
 devserver$ sudo node /opt/grasshopper/etc/scripts/data/timetable-import.js -f /tmp/timetabledata.json -a 1
 devserver$ sudo start grasshopper
+
+# You can monitor grasshopper's logs:
+devserver$ sudo tail -f /var/log/upstart/grasshopper.log
 
 ## TODO some of the above steps will be automated
 ## NOTE: you may get some of the following warnings and errors, but these can safely be ignored:
