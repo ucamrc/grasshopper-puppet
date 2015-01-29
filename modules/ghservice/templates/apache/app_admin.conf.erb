@@ -1,13 +1,13 @@
-<VirtualHost 127.0.0.1:80>
-    ServerAdmin admin@grasshopper.com
+# keep in sync with https://github.com/ucamrc/grasshopper-ui/blame/master/apps/admin/apache/app.conf
+<VirtualHost *:80>
+#    ServerAdmin admin@grasshopper.com
     DocumentRoot /opt/grasshopper-ui/apps/admin/ui
-    ServerName admin.grasshopper.com
-    ServerAlias admin.grasshopper.com
+    ServerName <%= @admin_servername %>
     ErrorLog /var/log/apache2/logsadmin_error.log
     CustomLog /var/log/apache2/logsadmin_custom.log common
 
     # Proxy api calls to the application server
-    ProxyPass /api http://localhost:2000/api
+    ProxyPass /api http://localhost:2000/api retry=5
     ProxyPassReverse /api http://localhost:2000/api
     ProxyPreserveHost On
 
