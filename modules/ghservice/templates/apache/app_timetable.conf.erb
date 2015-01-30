@@ -11,23 +11,43 @@
 #</VirtualHost>
 
 <VirtualHost *:80>
-    ServerAdmin admin@grasshopper.com
+
+
+    # ----------------------------------------------------------------------
+    # General Host Settings
+    # ----------------------------------------------------------------------
+
+# TODO parameterise this and put something useful in esp as it becomes public
+#     ServerAdmin admin@grasshopper.com
     DocumentRoot /opt/grasshopper-ui/apps/timetable/ui
 # Deliberately omit ServerName for now to allow tenant testing
 #    ServerName thingy.grasshopper.doodah
+
     ErrorLog /var/log/apache2/logstimetable_error.log
     CustomLog /var/log/apache2/logstimetable_custom.log common
+
+    # ----------------------------------------------------------------------
+    # ProxyPass Directives
+    # ----------------------------------------------------------------------
 
     # Proxy api calls to the application server
     ProxyPass /api http://localhost:2001/api retry=0
     ProxyPassReverse /api http://localhost:2001/api
     ProxyPreserveHost On
 
+
+    # ----------------------------------------------------------------------
+    # General Directives
+    # ----------------------------------------------------------------------
+
     # Shared files
     Alias /shared /opt/grasshopper-ui/shared
 
     # App files
     Alias /apps /opt/grasshopper-ui/apps
+
+    # Tenant Admin
+    Alias /admin <%= apacheConf.timetable.admin %>
 
     # QUnit tests
     Alias /qunit /opt/grasshopper-ui/tests/qunit
@@ -40,6 +60,19 @@
         RewriteBase /qunit
         RewriteRule ^api\.(.*)$ /opt/grasshopper-ui/tests/qunit/tests/api.$1.html
     </Directory>
+
+    RewriteEngine On
+    RewriteRule ^/notfound$     <%= apacheConf.admin.shared %>/gh/errors/404.html
+    RewriteRule ^/unavailable$  <%= apacheConf.admin.shared %>/gh/errors/503.html
+
+
+    # ----------------------------------------------------------------------
+    # Error Documents
+    # ----------------------------------------------------------------------
+
+    ErrorDocument 401 /shared/gh/errors/401.html
+    ErrorDocument 404 /shared/gh/errors/404.html
+    ErrorDocument 503 /shared/gh/errors/503.html
 
     <Directory />
 # RETHINK THIS? this is for externally visible servers so that timetable data not mistaken for real - this is even before login (even with Shib)
