@@ -22,9 +22,6 @@ devserver$ sudo git clone git://github.com/CUL-DigitalServices/grasshopper-puppe
 devserver$ cd /opt/grasshopper-puppet
 # Edit common.json to make web_domain match your new server's hostname
 devserver$ sudo vim environments/dev/hiera/common.json
-# Set username and password to protect externally visible server with play data in
-devserver$ sudo apt-get install apache2-utils
-devserver$ sudo htpasswd -bc /opt/dev_auth_file #username# #password#
 # Copy some timetable data to import onto the server
 local$ scp timetabledata.json devserver.ontheinternet:/tmp/timetabledata.json
 # Back to the server to run puppet
@@ -39,6 +36,9 @@ devserver$ sudo start grasshopper
 
 # You can monitor grasshopper's logs:
 devserver$ sudo tail -f /var/log/upstart/grasshopper.log
+
+# Set username and password to protect externally visible server with play data in
+devserver$ sudo htpasswd -c /opt/dev_auth_file #username#
 
 ## HANDY HINT, especially for EC2 users (and similar)
 ## You may want to avoid changing your hostname - either get a static IP, or don't shutdown!

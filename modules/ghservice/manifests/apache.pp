@@ -12,6 +12,10 @@ class ghservice::apache {
     class { '::apache::mod::proxy_http': }
     class { '::apache::mod::rewrite': }
 
+# TODO make this optional - only required on externally visible dev servers
+    # This is required to install htpasswd
+    package { 'apache2-utils': }
+
     apache::listen { '80': }
 
 ### CHECK IF THIS IS THE RIGHT WAY TO DO THIS?
