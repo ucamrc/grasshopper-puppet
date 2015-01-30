@@ -64,9 +64,38 @@ class grasshopper (
     content =>  template('grasshopper/upstart_grasshopper.conf.erb'),
   }
 
+
+############# REFACTOR THIS BLOCK OUT ##################
+
+    # FIXME this duplicates code in modules/ghservice/manifests/grasshopper.pp
+    $web_domain = hiera('web_domain')
+    $app_admin_tenant = hiera('app_admin_tenant', 'admin')
+    $admin_domain = "${app_admin_tenant}.${web_domain}"
+
+# TODO think about the case when grasshopper is already running
+  exec { 'temporarily-start-grasshopper': command => 'start grasshopper' } ->
+  exec { 'wait-grasshopper-starting':     command => 'sleep 5' } ->
+
+  file { '/tmp/setup-via-api.sh':
+# FIXME move this source file when we refactor this whole end block out
+    source => 'puppet:///modules/grasshopper/setup-via-api.sh'
+  } ->
+# FIXME is web_domain necessarily right beyond dev server?
+  exec { 'initial-config-via-REST': command => "/tmp/setup-via-api.sh ${admin_domain} ${web_domain}" } ->
+
+  exec { 'temporarily-stop-grasshopper': command => 'stop grasshopper' } ->
+  exec { 'wait-grasshopper-stopping': command => 'sleep 5' } ->
+# NOTE app-id currently hardcoded 1 to match script
+  exec { 'import':
+     command => "${app_root_dir}/etc/scripts/data/timetable-import.js -f /tmp/timetabledata.json -a 1",
+  } ->
+
+  # This describes the final state after the transitional setup states above
   service { 'grasshopper':
     ensure   => running,
     provider => 'upstart',
     require  => [ File['/etc/init/grasshopper.conf', "${app_root_dir}/config.js"] , Class['ghservice::postgresql'] ]
   }
+
+
 }

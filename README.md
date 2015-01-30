@@ -20,19 +20,18 @@ devserver$ sudo apt-get update
 devserver$ sudo apt-get install git
 devserver$ sudo git clone git://github.com/CUL-DigitalServices/grasshopper-puppet /opt/grasshopper-puppet
 devserver$ cd /opt/grasshopper-puppet
-# Edit common.json to make web_domain match your new server's hostname
+
+# Edit common.json:
+# - to make web_domain match your new server's hostname
+# - to change git config to match a tag if appropriate
 devserver$ sudo vim environments/dev/hiera/common.json
+
 # Copy some timetable data to import onto the server
 local$ scp timetabledata.json devserver.ontheinternet:/tmp/timetabledata.json
-# Back to the server to run puppet
-devserver$ sudo ./provisioning/grasshopper/init.sh
 
-# Now we have a server, put some data in it:
-devserver$ ./provisioning/setup-via-api.sh admin.devserver.ontheinternet devserver.ontheinternet
-devserver$ sudo stop grasshopper
-# This next step could take up to around 30mins if you have a slow server and lots of data!
-devserver$ sudo node /opt/grasshopper/etc/scripts/data/timetable-import.js -f /tmp/timetabledata.json -a 1
-devserver$ sudo start grasshopper
+# Back to the server to run puppet
+# This next step could take up to around 60mins if you have a slow server and lots of data to import!
+devserver$ sudo ./provisioning/grasshopper/init.sh
 
 # You can monitor grasshopper's logs:
 devserver$ sudo tail -f /var/log/upstart/grasshopper.log
