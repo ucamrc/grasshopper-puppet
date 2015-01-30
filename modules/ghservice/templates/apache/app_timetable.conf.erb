@@ -47,7 +47,7 @@
     Alias /apps /opt/grasshopper-ui/apps
 
     # Tenant Admin
-    Alias /admin <%= apacheConf.timetable.admin %>
+    Alias /admin /opt/grasshopper-ui/apps/timetable/admin
 
     # QUnit tests
     Alias /qunit /opt/grasshopper-ui/tests/qunit
@@ -62,8 +62,8 @@
     </Directory>
 
     RewriteEngine On
-    RewriteRule ^/notfound$     <%= apacheConf.admin.shared %>/gh/errors/404.html
-    RewriteRule ^/unavailable$  <%= apacheConf.admin.shared %>/gh/errors/503.html
+    RewriteRule ^/notfound$     /opt/grasshopper-ui/shared/gh/errors/404.html
+    RewriteRule ^/unavailable$  /opt/grasshopper-ui/shared/gh/errors/503.html
 
 
     # ----------------------------------------------------------------------
