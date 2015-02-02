@@ -37,7 +37,7 @@ class grasshopper::setup (
       onlyif  => "test -f /tmp/timetabledata.json",
       creates => "/opt/timetabledata.json.imported",
       # NOTE app-id currently hardcoded 1 to match setup-via-api.sh
-      command => "${app_root_dir}/etc/scripts/data/timetable-import.js --file /tmp/timetabledata.json --app 1 && mv -i /tmp/timetabledata.json /opt/timetabledata.json.imported",
+      command => "node ${app_root_dir}/etc/scripts/data/timetable-import.js --file /tmp/timetabledata.json --app 1 && mv -i /tmp/timetabledata.json /opt/timetabledata.json.imported",
   }
 
 }
