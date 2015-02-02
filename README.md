@@ -37,7 +37,8 @@ devserver$ sudo ./provisioning/grasshopper/init.sh
 devserver$ sudo tail -f /var/log/upstart/grasshopper.log
 
 # Set username and password to protect externally visible server with play data in
-devserver$ sudo htpasswd -c /opt/dev_auth_file #username#
+# (This only applies in environments where ghservice::apache::enable_basic_auth is true)
+devserver$ sudo htpasswd -c /etc/apache2/dev_auth_file #username#
 
 ## HANDY HINT, especially for EC2 users (and similar)
 ## You may want to avoid changing your hostname - either get a static IP, or don't shutdown!
