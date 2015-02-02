@@ -1,20 +1,19 @@
-class ghservice::apache {
+class ghservice::apache (
+    $enable_basic_auth = "false" 
+    ) {
 
     class { '::apache': 
         default_vhost => false,
-
-## REDO THIS FROM UBUNTU VERSION ??
-## or is standard one good enough (with the two mod enables below)
-##        conf_template => 'ghservice/apache/httpd.conf.erb'
     }
 
     class { '::apache::mod::proxy': }
     class { '::apache::mod::proxy_http': }
     class { '::apache::mod::rewrite': }
 
-# TODO make this optional - only required on externally visible dev servers
-    # This is required to install htpasswd
-    package { 'apache2-utils': }
+    if str2bool($enable_basic_auth) {
+      # This package provides the "htpasswd" command for setting passwords
+      package { 'apache2-utils': }
+    }
 
     apache::listen { '80': }
 
