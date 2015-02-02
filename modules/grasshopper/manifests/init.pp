@@ -77,6 +77,7 @@ class grasshopper (
     $admin_domain = "${app_admin_tenant}.${web_domain}"
 
   class { 'grasshopper::setup':
+    admin_test_url   => "${admin_domain}:2000/api/me",
     tenant_test_url  => "${web_domain}:2001/api/me",
     tenant_login_url => "${web_domain}:2001/api/auth/login",
     admin_domain     => $admin_domain,
