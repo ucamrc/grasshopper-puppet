@@ -79,6 +79,9 @@ class grasshopper (
   class { 'grasshopper::setup':
     tenant_test_url  => "${web_domain}:2001/api/me",
     tenant_login_url => "${web_domain}:2001/api/auth/login",
+    admin_domain     => $admin_domain,
+    web_domain       => $web_domain,
+    app_root_dir     => $app_root_dir,
     require          => [ File['/etc/init/grasshopper.conf', "${app_root_dir}/config.js"] , Class['ghservice::postgresql'] ]
   } ->
 
