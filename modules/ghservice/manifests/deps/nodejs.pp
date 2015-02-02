@@ -1,7 +1,6 @@
-class ghservice::deps::nodejs () {
-
-    # Get the version from hiera
-    $nodejs_version = hiera('nodejs_version', '0.10.36-1nodesource1~trusty1')
+class ghservice::deps::nodejs (
+    $nodejs_version = "0.10.35-1nodesource1~trusty"
+    ) {
 
     # Apply the nodejs class which will configure the apt repo and install nodejs
     class { '::nodejs':

@@ -44,7 +44,7 @@
     },
 
     /* Node.JS version */
-    "ghservice::deps::package::nodejs::nodejs_version": "0.10.35-1nodesource1~trusty1",
+    "ghservice::deps::nodejs::nodejs_version": "0.10.36-1nodesource1~trusty1",
 
     /* PostgreSQL settings */
     "ghservice::postgresql::version": "",
@@ -53,6 +53,7 @@
     "ghservice::postgresql::pass": "grasshopper",
 
     /* Apache directives */
-    "ghservice::apache::version": ""
+    "ghservice::apache::version": "",
+    "ghservice::apache::enable_basic_auth": "true"
 
 }
