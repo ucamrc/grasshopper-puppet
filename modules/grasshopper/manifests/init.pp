@@ -72,22 +72,35 @@ class grasshopper (
     $app_admin_tenant = hiera('app_admin_tenant', 'admin')
     $admin_domain = "${app_admin_tenant}.${web_domain}"
 
-# TODO think about the case when grasshopper is already running
-  exec { 'temporarily-start-grasshopper': command => 'start grasshopper' } ->
-  exec { 'wait-grasshopper-starting':     command => 'sleep 5' } ->
+  $tenant_test_url = "${web_domain}:2001/api/me"
+  $tenant_login_url = "${web_domain}:2001/api/auth/login"
+
+# TODO make sure all prereqs ready before trying to run start grasshopper !!
+  exec { 'temporarily-start-grasshopper':
+          unless  => "curl --fail ${tenant_test_url}",
+          command => 'start grasshopper && sleep 5'
+  } ->
 
   file { '/tmp/setup-via-api.sh':
 # FIXME move this source file when we refactor this whole end block out
     source => 'puppet:///modules/grasshopper/setup-via-api.sh'
   } ->
 # FIXME is web_domain necessarily right beyond dev server?
-  exec { 'initial-config-via-REST': command => "/tmp/setup-via-api.sh ${admin_domain} ${web_domain}" } ->
+  exec { 'initial-config-via-REST':
+         unless  => "curl --fail ${$tenant_login_url} -e / -X POST -d 'username=admin@test.local&password=admin'",
+         command => "/tmp/setup-via-api.sh ${admin_domain} ${web_domain}"
+  } ->
 
-  exec { 'temporarily-stop-grasshopper': command => 'stop grasshopper' } ->
-  exec { 'wait-grasshopper-stopping': command => 'sleep 5' } ->
+  exec { 'temporarily-stop-grasshopper':
+          onlyif  => "test -f /tmp/timetabledata.json && curl --fail ${tenant_test_url}",
+          creates => "/opt/timetabledata.json.imported",
+          command => 'stop grasshopper && sleep 5',
+  } ->
 # NOTE app-id currently hardcoded 1 to match script
   exec { 'import':
-     command => "${app_root_dir}/etc/scripts/data/timetable-import.js -f /tmp/timetabledata.json -a 1",
+     onlyif  => "test -f /tmp/timetabledata.json",
+     creates => "/opt/timetabledata.json.imported",
+     command => "${app_root_dir}/etc/scripts/data/timetable-import.js -f /tmp/timetabledata.json -a 1 && mv -i /tmp/timetabledata.json /opt/timetabledata.json.imported",
   } ->
 
   # This describes the final state after the transitional setup states above
