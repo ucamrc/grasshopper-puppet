@@ -25,8 +25,12 @@ class grasshopper (
     $config_db_user = hiera('ghservice::postgresql::user'),
     $config_db_pass = hiera('ghservice::postgresql::pass'),
 
+    # Initialisation
+    $ensure_tenant_admin_created = "true",
+
     # UI
-    $config_ui_path = '/opt/grasshopper-ui') {
+    $config_ui_path = '/opt/grasshopper-ui'
+  ) {
 
 
   ##################
@@ -76,6 +80,8 @@ class grasshopper (
   $tenant_login_url = "${web_domain}:2001/api/auth/login"
 
 # TODO make sure all prereqs ready before trying to run start grasshopper !!
+
+  if str2bool($ensure_tenant_admin_created) {
   exec { 'temporarily-start-grasshopper':
           unless  => "curl --fail ${tenant_test_url}",
           command => 'start grasshopper && sleep 5'
@@ -89,7 +95,9 @@ class grasshopper (
   exec { 'initial-config-via-REST':
          unless  => "curl --fail ${$tenant_login_url} -e / -X POST -d 'username=admin@test.local&password=admin'",
          command => "/tmp/setup-via-api.sh ${admin_domain} ${web_domain}"
-  } ->
+  } -> Exec['temporarily-stop-grasshopper']
+
+  }
 
   exec { 'temporarily-stop-grasshopper':
           onlyif  => "test -f /tmp/timetabledata.json && curl --fail ${tenant_test_url}",
