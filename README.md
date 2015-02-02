@@ -18,6 +18,7 @@ Puppet configuration and environment management for the Grasshopper event engine
 local$ ssh devserver.ontheinternet
 devserver$ sudo apt-get update
 devserver$ sudo apt-get install git
+# (If you're testing puppet changes not in main master, don't forget to modify this next line!)
 devserver$ sudo git clone git://github.com/CUL-DigitalServices/grasshopper-puppet /opt/grasshopper-puppet
 devserver$ cd /opt/grasshopper-puppet
 
@@ -33,12 +34,15 @@ local$ scp timetabledata.json devserver.ontheinternet:/tmp/timetabledata.json
 # This next step could take up to around 60mins if you have a slow server and lots of data to import!
 devserver$ sudo ./provisioning/grasshopper/init.sh
 
-# You can monitor grasshopper's logs:
-devserver$ sudo tail -f /var/log/upstart/grasshopper.log
-
 # Set username and password to protect externally visible server with play data in
 # (This only applies in environments where ghservice::apache::enable_basic_auth is true)
 devserver$ sudo htpasswd -c /etc/apache2/dev_auth_file #username#
+
+# In a web browser, try going to the hostname you entered into common.json above
+# It should show you the Student UI!
+
+# You can monitor grasshopper's logs:
+devserver$ sudo tail -f /var/log/upstart/grasshopper.log
 
 ## HANDY HINT, especially for EC2 users (and similar)
 ## You may want to avoid changing your hostname - either get a static IP, or don't shutdown!
