@@ -8,12 +8,12 @@ Puppet configuration and environment management for the Grasshopper event engine
  * If you make changes to the backend code you will need to restart the app server. This can be done by ssh'ing into the client machine by running `service grasshopper restart`.
  * Even if you'd install all the components on your host OS, you would not be able to run the server as some of the npm modules are compiled during the provisioning step.
 
-### Dev Environment
+### Dev Environment (e.g. on EC2)
 
 ```
 ## TODO some of these steps will be automated
 
-# Provision an Ubuntu Trusty server (e.g. on EC2)
+# Provision an Ubuntu Trusty server
 # Then:
 local$ ssh devserver.ontheinternet
 devserver$ sudo apt-get update
@@ -32,6 +32,7 @@ local$ scp timetabledata.json devserver.ontheinternet:/tmp/timetabledata.json
 
 # Back to the server to run puppet
 # This next step could take up to around 60mins if you have a slow server and lots of data to import!
+# Take note of the puppet command line displayed at the end, you may find it useful later
 devserver$ sudo ./provisioning/grasshopper/init.sh
 
 # Set username and password to protect externally visible server with play data in
@@ -41,8 +42,10 @@ devserver$ sudo htpasswd -c /etc/apache2/dev_auth_file #username#
 # In a web browser, try going to the hostname you entered into common.json above
 # It should show you the Student UI!
 
-# You can monitor grasshopper's logs:
+# You can monitor grasshopper's logs like this:
 devserver$ sudo tail -f /var/log/upstart/grasshopper.log
+# You can control the grasshopper server like this:
+devserver$ sudo service grasshopper [start|stop|restart]
 
 ## HANDY HINT, especially for EC2 users (and similar)
 ## You may want to avoid changing your hostname - either get a static IP, or don't shutdown!
@@ -55,6 +58,11 @@ devserver$ sudo tail -f /var/log/upstart/grasshopper.log
 - Could not retrieve fact='apt_updates'...
 - Could not retrieve fact='apt_security_updates'...
 (Last two pertain to /usr/lib/update-notifier/apt-check)
+
+## If you wish to access the Global Admin (e.g. UI or Swagger Docs)
+## you will need to edit the /etc/hosts file on the client that
+## you wish to browse from. Add something like this to it:
+nn.nnn.nn.n  admin.ec2-nn-nnn-nn-n.eu-west-1.compute.amazonaws.com
 ```
 
 ### Local machine / Vagrant
