@@ -22,14 +22,3 @@ PUPPET_ENV=dev
 
 ${PROVIS_DIR}/common.sh ${PUPPET_REPO_DIR} ${PROVIS_DIR}/grasshopper/hiera.yaml ${PUPPET_ENV} "Run this command:"
 
-echo "All the dependencies have been restarted, sleeping for a bit to give them time to start up properly"
-sleep 5
-
-# Start the app server
-### PUPPET SHOULD DO THIS ALREADY?
-#service grasshopper restart
-
-echo "Sleeping 15 seconds to give the app server a little bit of time to start up"
-sleep 15
-
-curl http://localhost:2001/api/me
