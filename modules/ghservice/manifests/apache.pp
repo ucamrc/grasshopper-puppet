@@ -32,6 +32,12 @@ class ghservice::apache (
         default => 'all granted',
     }
 
+    $path_robotstxt         = '/var/www/robots.txt'
+
+    file { $path_robotstxt:
+       source => 'puppet:///modules/ghservice/robots.txt.disallowall'
+    }
+
     # VirtualHosts are loaded in alphabetical order;
     #
     # Requests that do not match a specified ServerName directive
