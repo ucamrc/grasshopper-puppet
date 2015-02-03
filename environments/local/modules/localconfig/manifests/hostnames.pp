@@ -1,7 +1,10 @@
 class localconfig::hostnames {
 
-    # Add a couple of hostnames that can be used as tenants
-    host { 'admin.timetable.vagrant.com': ip => '127.0.0.1' }
-#    host { '2014.timetable.vagrant.com': ip => '127.0.0.2' }
-#    host { '2013.timetable.vagrant.com': ip => '127.0.0.2' }
+    $admin_hostname = hiera('admin_hostname')
+    $tenant_hostname = hiera('tenant_hostname')
+
+    # These are defined to allow puppet and setup scripts to
+    # access localhost using the right servername
+    host { $admin_hostname: ip => '127.0.0.1' }
+    host { $tenant_hostname: ip => '127.0.0.1' }
 }

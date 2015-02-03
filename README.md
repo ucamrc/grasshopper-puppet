@@ -17,13 +17,13 @@ Puppet configuration and environment management for the Grasshopper event engine
 # Then:
 local$ ssh devserver.ontheinternet
 devserver$ sudo apt-get update
-devserver$ sudo apt-get install git
+devserver$ sudo apt-get -y install git
 # (If you're testing puppet changes not in main master, don't forget to modify this next line!)
 devserver$ sudo git clone git://github.com/CUL-DigitalServices/grasshopper-puppet /opt/grasshopper-puppet
 devserver$ cd /opt/grasshopper-puppet
 
 # Edit common.json:
-# - to make web_domain match your new server's hostname
+# - to make tenant_hostname match your new server's hostname
 # - to change git config to match a tag if appropriate
 devserver$ sudo vim environments/dev/hiera/common.json
 

@@ -9,8 +9,17 @@
         "::ghservice::ui"
     ],
 
-    /* Server domain */
-    "web_domain": "ec2-nn-nn-nn-nn.eu-west-1.compute.amazonaws.com",
+    /* Domains and hostnames */
+    "admin_hostname": "admin.%{hiera('tenant_hostname')}",
+    "tenant_hostname": "ec2-nn-nn-nn-nn.eu-west-1.compute.amazonaws.com",
+
+    // In future when we have DNS for real hostnames,
+    // one would probably want to structure domains like so:
+    // web_domain:      timetable.cam.ac.uk
+    // tenants:    2014.timetable.cam.ac.uk
+    //             2015.timetable.cam.ac.uk
+    // admin:     admin.timetable.cam.ac.uk
+    "web_domain": "not_used",
 
     /* Puppet node settings */
     "nodesuffix": "%{nodesuffix}",

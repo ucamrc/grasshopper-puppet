@@ -15,13 +15,9 @@ class ghservice::apache (
     class { '::apache::mod::proxy_http': }
     class { '::apache::mod::rewrite': }
 
-    # FIXME this duplicates code in modules/ghservice/manifests/grasshopper.pp
-    $web_domain = hiera('web_domain')
-    $app_admin_tenant = hiera('app_admin_tenant', 'admin')
-    $admin_domain = "${app_admin_tenant}.${web_domain}"
+    $admin_servername = hiera('admin_hostname')
+    $tenant_servername = hiera('tenant_hostname')
 
-    $admin_servername = $admin_domain
-    $tenant_servername = $web_domain
     $apache_dir_require = $enable_basic_auth ? {
         'true'  => 'valid-user',
         default => 'all granted',

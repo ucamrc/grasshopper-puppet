@@ -68,21 +68,16 @@ class grasshopper (
     content =>  template('grasshopper/upstart_grasshopper.conf.erb'),
   }
 
-
-############# REFACTOR THIS BLOCK OUT ##################
-
-    # FIXME this duplicates code in modules/ghservice/manifests/grasshopper.pp
-    $web_domain = hiera('web_domain')
-    $app_admin_tenant = hiera('app_admin_tenant', 'admin')
-    $admin_domain = "${app_admin_tenant}.${web_domain}"
+  $admin_hostname = hiera('admin_hostname')
+  $tenant_hostname = hiera('tenant_hostname')
 
   class { 'grasshopper::setup':
-    admin_test_url   => "${admin_domain}:2000/api/me",
-    tenant_test_url  => "${web_domain}:2001/api/me",
-    tenant_login_url => "${web_domain}:2001/api/auth/login",
-    admin_domain     => $admin_domain,
-    web_domain       => $web_domain,
     app_root_dir     => $app_root_dir,
+    admin_hostname   => $admin_hostname,
+    tenant_hostname  => $tenant_hostname,
+    admin_test_url   => "${admin_hostname}:2000/api/me",
+    tenant_test_url  => "${tenant_hostname}:2001/api/me",
+    tenant_login_url => "${tenant_hostname}:2001/api/auth/login",
     require          => [ File['/etc/init/grasshopper.conf', "${app_root_dir}/config.js"] , Class['ghservice::postgresql'] ]
   } ->
 

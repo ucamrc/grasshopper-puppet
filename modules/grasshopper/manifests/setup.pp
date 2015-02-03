@@ -1,8 +1,8 @@
 class grasshopper::setup (
     $ensure_tenant_admin_created = "true",
-    $admin_domain,
-    $web_domain,
     $app_root_dir,
+    $admin_hostname,
+    $tenant_hostname,
     $admin_test_url,
     $tenant_test_url,
     $tenant_login_url
@@ -21,8 +21,7 @@ class grasshopper::setup (
       exec { 'initial-setup-via-REST-API':
           # Hardcoded user/pass to match setup-via-api.sh
           unless  => "curl --fail ${tenant_login_url} -e / -X POST -d 'username=admin@test.local&password=admin'",
-          # FIXME is web_domain necessarily right beyond dev server?
-          command => "/tmp/setup-via-api.sh ${admin_domain} ${web_domain}"
+          command => "/tmp/setup-via-api.sh ${admin_hostname} ${tenant_hostname}"
       } -> Exec['temporarily-stop-grasshopper-for-import']
 
   }
