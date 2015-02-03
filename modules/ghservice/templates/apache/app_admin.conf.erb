@@ -30,22 +30,22 @@
     # ----------------------------------------------------------------------
 
     # Shared files
-    Alias /shared /opt/grasshopper-ui/shared
+    Alias /shared <%= @path_shared %>
 
     # API docs
-    Alias /docs /opt/grasshopper-ui/docs
+    Alias /docs <%= @path_docs %>
 
     # App files
-    Alias /apps /opt/grasshopper-ui/apps
+    Alias /apps <%= @path_apps %>
 
     # Configuration
-    Alias /configuration /opt/grasshopper-ui/apps/admin/ui
+    Alias /configuration <%= @path_admin_docroot %>
 
     # Tenants
-    Alias /tenants /opt/grasshopper-ui/apps/admin/ui
+    Alias /tenants <%= @path_admin_docroot %>
 
     # Users
-    Alias /users /opt/grasshopper-ui/apps/admin/ui
+    Alias /users <%= @path_admin_docroot %>
 
     # QUnit tests
     Alias /qunit /opt/grasshopper-ui/tests/qunit
@@ -60,8 +60,8 @@
     </Directory>
 
     RewriteEngine On
-    RewriteRule ^/notfound$     /opt/grasshopper-ui/shared/gh/errors/404.html
-    RewriteRule ^/unavailable$  /opt/grasshopper-ui/shared/gh/errors/503.html
+    RewriteRule ^/notfound$     <%= @path_shared %>/gh/errors/404.html
+    RewriteRule ^/unavailable$  <%= @path_shared %>/gh/errors/503.html
 
 
     # ----------------------------------------------------------------------

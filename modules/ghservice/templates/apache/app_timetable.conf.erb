@@ -14,6 +14,7 @@
     ErrorLog /var/log/apache2/logstimetable_error.log
     CustomLog /var/log/apache2/logstimetable_custom.log common
 
+
     # ----------------------------------------------------------------------
     # ProxyPass Directives
     # ----------------------------------------------------------------------
@@ -29,13 +30,13 @@
     # ----------------------------------------------------------------------
 
     # Shared files
-    Alias /shared /opt/grasshopper-ui/shared
+    Alias /shared <%= @path_shared %>
 
     # App files
-    Alias /apps /opt/grasshopper-ui/apps
+    Alias /apps <%= @path_apps %>
 
     # Tenant Admin
-    Alias /admin /opt/grasshopper-ui/apps/timetable/admin
+    Alias /admin <%= @path_timetable_admin %>
 
     # QUnit tests
     Alias /qunit /opt/grasshopper-ui/tests/qunit
@@ -50,8 +51,8 @@
     </Directory>
 
     RewriteEngine On
-    RewriteRule ^/notfound$     /opt/grasshopper-ui/shared/gh/errors/404.html
-    RewriteRule ^/unavailable$  /opt/grasshopper-ui/shared/gh/errors/503.html
+    RewriteRule ^/notfound$     <%= @path_shared %>/gh/errors/404.html
+    RewriteRule ^/unavailable$  <%= @path_shared %>/gh/errors/503.html
 
 
     # ----------------------------------------------------------------------

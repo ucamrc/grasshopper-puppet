@@ -18,6 +18,15 @@ class ghservice::apache (
     $admin_servername = hiera('admin_hostname')
     $tenant_servername = hiera('tenant_hostname')
 
+    $path_ui_root = hiera('ui_root_dir')
+
+    $path_shared            = "${path_ui_root}/shared"
+    $path_docs              = "${path_ui_root}/docs"
+    $path_apps              = "${path_ui_root}/apps"
+    $path_admin_docroot     = "${path_ui_root}/apps/admin/ui"
+    $path_timetable_docroot = "${path_ui_root}/apps/timetable/ui"
+    $path_timetable_admin   = "${path_ui_root}/apps/timetable/admin"
+
     $apache_dir_require = $enable_basic_auth ? {
         'true'  => 'valid-user',
         default => 'all granted',
@@ -38,9 +47,9 @@ class ghservice::apache (
         vhost_name      => '*',
         port            => '80',
         servername      => $tenant_servername,
-        docroot         => "/opt/grasshopper-ui/apps/timetable/ui",
+        docroot         => $path_timetable_docroot,
         directories     => [
-            { 'path'      => "/opt/grasshopper-ui/apps/timetable/ui",
+            { 'path'      => $path_timetable_docroot,
               'require'   => $apache_dir_require,
             }
         ],
@@ -56,9 +65,9 @@ class ghservice::apache (
         vhost_name      => '*',
         port            => '80',
         servername      => $admin_servername,
-        docroot         => "/opt/grasshopper-ui/apps/admin/ui",
+        docroot         => $path_admin_docroot,
         directories     => [
-            { 'path'      => "/opt/grasshopper-ui/apps/admin/ui",
+            { 'path'      => $path_admin_docroot,
               'require'   => $apache_dir_require,
             }
         ],
