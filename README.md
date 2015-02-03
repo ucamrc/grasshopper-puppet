@@ -11,8 +11,6 @@ Puppet configuration and environment management for the Grasshopper event engine
 ### Dev Environment (e.g. on EC2)
 
 ```
-## TODO some of these steps will be automated
-
 # Provision an Ubuntu Trusty server
 # Then:
 local$ ssh devserver.ontheinternet
