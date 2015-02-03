@@ -81,7 +81,6 @@ class grasshopper (
     require          => [ File['/etc/init/grasshopper.conf', "${app_root_dir}/config.js"] , Class['ghservice::postgresql'] ]
   } ->
 
-  # This describes the final state after the transitional setup states above
   service { 'grasshopper':
     ensure   => running,
     provider => 'upstart',
