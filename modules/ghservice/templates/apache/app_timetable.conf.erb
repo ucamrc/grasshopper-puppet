@@ -1,27 +1,15 @@
-# TODO sync with grasshopper-ui/blame/master/apps/timetable/apache/app.conf
+    ##
+    ## We control as much as possible in this Apache config fragment
+    ## but the first couple of directives are generated automatically
+    ## by puppetlabs-apache module
+    ##
 
-# TODO probably want this block back in production? (but in a separate file/ in the main apache2.conf), but for now allow random hosts to facilitate tenant testing
-#<VirtualHost *:80>
-# First VirtualHost block is default, catch random people browsing with wrong ServerName
-#    <Directory />
-#        Order Allow,Deny
-#        Deny from All
-#    </Directory>
-#
-#</VirtualHost>
-
-<VirtualHost *:80>
-
+    ## Keep this file in sync with this grunt template:
+    ## https://github.com/CUL-DigitalServices/grasshopper-ui/blob/master/apps/timetable/apache/app.conf
 
     # ----------------------------------------------------------------------
-    # General Host Settings
+    # Logging Settings
     # ----------------------------------------------------------------------
-
-# TODO parameterise this and put something useful in esp as it becomes public
-#     ServerAdmin admin@grasshopper.com
-    DocumentRoot /opt/grasshopper-ui/apps/timetable/ui
-# Deliberately omit ServerName for now to allow tenant testing
-#    ServerName thingy.grasshopper.doodah
 
     ErrorLog /var/log/apache2/logstimetable_error.log
     CustomLog /var/log/apache2/logstimetable_custom.log common
@@ -77,10 +65,12 @@
 <% if @enable_basic_auth == "true" -%>
     <Directory />
         AuthType basic
-        AuthName "Grasshopper Dev Server"
+        AuthName "Grasshopper Dev Server (Tenant)"
         AuthUserFile /etc/apache2/dev_auth_file
         Require valid-user
     </Directory>
 <% end -%>
 
-</VirtualHost>
+    ##
+    ## End custom fragment
+    ##
