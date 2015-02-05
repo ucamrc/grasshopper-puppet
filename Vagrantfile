@@ -6,7 +6,9 @@ Vagrant.configure("2") do |config|
   # Use the "grasshopper" box to host
   config.vm.box = "grasshopper"
 
-  # Forward http traffic
+  # Rather than forwarding ports from the Virtualbox to the host OS localhost,
+  # we create an environment that is more similar to EC2, where the Virtualbox
+  # VM gets its own IP address (albeit only accessible from your host box).
   config.vm.network "private_network", ip: "192.168.56.123"
 
   # Share the back-end and front-end code with Vagrant.

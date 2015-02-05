@@ -36,13 +36,13 @@ Vice versa, do not try to share anything that you compiled on your host OS with 
 ##### Configure your hosts file
 
 The hosts file is a file that allows you to map fake domain names to certain IP addresses. By mapping them to
-the local loopback address we can fake multiple tenants running on one system.
+the Virtualbox VM IP address we can fake multiple tenants running on one system. (This IP address is specified in `Vagrantfile`).
 Edit your hosts file (`/etc/hosts` on UNIX, C:\Windows\System32\drivers\etc\hosts on Windows) and add the following entries.
 
 ```
-127.0.0.1   admin.timetable.vagrant.com
-127.0.0.2   2014.timetable.vagrant.com
-127.0.0.2   2013.timetable.vagrant.com
+192.168.56.123   admin.timetable.vagrant.com
+192.168.56.123   2014.timetable.vagrant.com
+192.168.56.123   2013.timetable.vagrant.com
 ```
 
 ##### Configure the amount of memory Vagrant/VirtualBox can use.
