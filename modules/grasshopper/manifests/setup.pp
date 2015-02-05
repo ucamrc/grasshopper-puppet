@@ -27,14 +27,33 @@ class grasshopper::setup (
 
   }
 
+
   exec { 'temporarily-stop-grasshopper-for-import':
       # if file for import exists and server is responding, stop the server
       onlyif  => "test -f /tmp/timetabledata.json && curl --fail ${admin_test_url}",
+
+      # "creates => foo" is confusing puppet-speak for:
+      # "command will create file foo, so don't execute if foo already exists"
+      #
+      # In actual fact, the next exec below "creates" the file.
+      # We replicate the conditional on this exec so that we don't stop
+      # grasshopper unless we're actually planning to import anything.
       creates => "/opt/timetabledata.json.imported",
+
       command => 'stop grasshopper && sleep 5',
   } ->
+
+  # If     /tmp/timetabledata.json exists
+  #    and /opt/timetabledata.json.imported does not exist:
+  #
+  # Then import /tmp/timetabledata.json
+  #
+  # If successfully imported
+  # Then move the file to /opt/timetabledata.json.imported
+  #
   exec { 'import-timetable-data':
       onlyif  => "test -f /tmp/timetabledata.json",
+      # The "mv" part of the command results in this file being "created":
       creates => "/opt/timetabledata.json.imported",
       # NOTE app-id currently hardcoded 1 to match setup-via-api.sh
       command => "node ${app_root_dir}/etc/scripts/data/timetable-import.js --file /tmp/timetabledata.json --app 1 && mv -i /tmp/timetabledata.json /opt/timetabledata.json.imported",
