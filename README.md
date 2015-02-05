@@ -10,58 +10,76 @@ Puppet configuration and environment management for the Grasshopper event engine
 
 ### Dev Environment (e.g. on EC2)
 
+#### Provisioning
+
+Provision an Ubuntu Trusty server, then:
 ```
-# Provision an Ubuntu Trusty server
-# Then:
 local$ ssh devserver.ontheinternet
 devserver$ sudo apt-get update
 devserver$ sudo apt-get -y install git
 # (If you're testing puppet changes not in main master, don't forget to modify this next line!)
 devserver$ sudo git clone git://github.com/CUL-DigitalServices/grasshopper-puppet /opt/grasshopper-puppet
 devserver$ cd /opt/grasshopper-puppet
+```
 
-# Edit common.json:
-# - to make tenant_hostname match your new server's hostname
-# - to change git config to match a tag if appropriate
-devserver$ sudo vim environments/dev/hiera/common.json
+Now edit `common.json`:
+* to make `tenant_hostname` match your new server's hostname
+* to change git config to match a tag if appropriate
 
-# Copy some timetable data to import onto the server
-local$ scp timetabledata.json devserver.ontheinternet:/tmp/timetabledata.json
+`devserver$ sudo vim environments/dev/hiera/common.json`
 
-# Back to the server to run puppet
-# This next step could take up to around 60mins if you have a slow server and lots of data to import!
-# Take note of the puppet command line displayed at the end, you may find it useful later
-devserver$ sudo ./provisioning/grasshopper/init.sh
+Copy some timetable data to import onto the server:
 
-# Set username and password to protect externally visible server with play data in
-# (This only applies in environments where ghservice::apache::enable_basic_auth is true)
-devserver$ sudo htpasswd -c /etc/apache2/dev_auth_file #username#
+`local$ scp timetabledata.json devserver.ontheinternet:/tmp/timetabledata.json`
 
-# In a web browser, try going to the hostname you entered into common.json above
-# It should show you the Student UI!
+Back to the server to run puppet. **Take note** of the puppet command line displayed at the end, you may find it useful later.
+This puppet step could take **at least 60 mins** if you have a slow server and lots of data to import!
 
-# You can monitor grasshopper's logs like this:
-devserver$ sudo tail -f /var/log/upstart/grasshopper.log
-# You can control the grasshopper server like this:
-devserver$ sudo service grasshopper [start|stop|restart]
+`devserver$ sudo ./provisioning/grasshopper/init.sh`
 
-## HANDY HINT, especially for EC2 users (and similar)
-## You may want to avoid changing your hostname - either get a static IP, or don't shutdown!
-## Otherwise reconfiguring the system with a new hostname might be fiddly
-## (Have not yet tested/audited how fiddly or whether puppet will fix it all;
-##  but for instance, the setup-via-api.sh script won't know how to rename an app etc)
+*Optional: only on environments like `dev` where `ghservice::apache::enable_basic_auth` is `true`:*
+* *Set username and password to protect externally visible server with play data in:*
+* *`devserver$ sudo htpasswd -c /etc/apache2/dev_auth_file #username#`*
 
-## NOTE: you may get some of the following warnings and errors, but these can safely be ignored:
+#### Client usage
+
+In a web browser, try going to the hostname you entered into `common.json` above, 
+it should show you the Student UI!
+
+If you wish to access the Global Admin (e.g. UI or Swagger Docs)
+you will need to edit the `/etc/hosts` file on the client that
+you wish to browse from. Add something like this to it:
+
+`nn.nnn.nn.n  admin.ec2-nn-nnn-nn-n.eu-west-1.compute.amazonaws.com`
+
+#### Grasshopper usage
+
+You can monitor grasshopper's logs like this:
+
+`devserver$ sudo tail -f /var/log/upstart/grasshopper.log`
+
+You can control the grasshopper server like this:
+
+`devserver$ sudo service grasshopper [start|stop|restart]`
+
+#### HANDY HINT, especially for EC2 users (and similar)
+
+You may want to **avoid changing your hostname** - either get a static IP, or don't shutdown!
+Otherwise reconfiguring the system with a new hostname might be fiddly.
+*(Have not yet tested/audited how fiddly or whether puppet will fix it all;
+but for instance, the `setup-via-api.sh` script won't know how to rename an app etc)*
+
+#### Known warnings and errors during provisioning
+
+**NOTE**: during the puppet step, you may get some of the following warnings and errors, but these can safely be ignored:
+*(Last two pertain to `/usr/lib/update-notifier/apt-check`)*
+
+```
 - Warning: Setting templatedir is deprecated ...
 - Could not retrieve fact='apt_updates'...
 - Could not retrieve fact='apt_security_updates'...
-(Last two pertain to /usr/lib/update-notifier/apt-check)
-
-## If you wish to access the Global Admin (e.g. UI or Swagger Docs)
-## you will need to edit the /etc/hosts file on the client that
-## you wish to browse from. Add something like this to it:
-nn.nnn.nn.n  admin.ec2-nn-nnn-nn-n.eu-west-1.compute.amazonaws.com
 ```
+
 
 ### Local machine / Vagrant
 
