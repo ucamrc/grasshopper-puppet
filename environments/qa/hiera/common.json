@@ -41,7 +41,7 @@
     "app_install_method": "git",
     "app_install_config": {
         "source": "https://github.com/CUL-DigitalServices/grasshopper.git",
-        "revision": "master"
+        "revision": "aa6778632f49c148b6589cf949e6f6b29bec3d80"
     },
 
     /* Grasshopper UI repository */
@@ -49,7 +49,7 @@
     "ui_install_method": "git",
     "ui_install_config": {
         "source": "https://github.com/CUL-DigitalServices/grasshopper-ui.git",
-        "revision": "master"
+        "revision": "6df786cf5bd4d95c9e323586208dce3bfba9f55e"
     },
 
     /* Node.JS version */
@@ -63,6 +63,6 @@
 
     /* Apache directives */
     "ghservice::apache::version": "",
-    "ghservice::apache::enable_basic_auth": "true"
+    "ghservice::apache::enable_basic_auth": "false"
 
 }
