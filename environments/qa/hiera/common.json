@@ -36,6 +36,8 @@
         "127.0.0.2"
     ],
 
+    "grasshopper::setup::tenant_appdisplayname_escaped": "My+Timetable+-+Beta",
+
     /* Grasshopper repository */
     "app_ui_path": "/opt/grasshopper-ui",
     "app_install_method": "git",
