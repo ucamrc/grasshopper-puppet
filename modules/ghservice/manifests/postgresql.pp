@@ -5,7 +5,6 @@ class ghservice::postgresql (
     ) {
 
     class { 'postgresql::server': }
-
     class { 'postgresql::server::contrib': }
 
     postgresql::server::db { "$db":

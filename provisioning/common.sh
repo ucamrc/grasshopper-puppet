@@ -18,7 +18,7 @@ fi
 # Enable multiverse repositories
 echo "Enable multiverse repositories"
 sed -i "/^# deb.*multiverse/ s/^# //" /etc/apt/sources.list
-#apt-get update
+# No need to "apt-get update" as puppetlabs-apt will do it for us
 
 # Make sure all the submodules have been pulled down
 cd ${PUPPET_REPO_DIR}
@@ -28,7 +28,6 @@ sh bin/pull.sh
 cp ${PUPPET_HIERA} /etc/puppet/hiera.yaml
 
 # Run puppet
-
 PUPPET_EXTRA_OPTS="--verbose"
 PUPPET_CMD="puppet apply ${PUPPET_EXTRA_OPTS} --modulepath environments/${PUPPET_ENV}/modules:modules:/etc/puppet/modules --certname dev0 --environment ${PUPPET_ENV} --hiera_config /etc/puppet/hiera.yaml site.pp"
 
