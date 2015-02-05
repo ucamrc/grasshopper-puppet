@@ -92,7 +92,7 @@ devserver$ cd /opt/grasshopper-puppet
 
 Now edit the right `common.json` for your chosen environment (`dev`/`qa`):
 * to make `tenant_hostname` match your new server's hostname
-* to change git config to match a tag if appropriate
+* review the two git `revision`s under `app_install_config`: if appropriate, edit each to a commit SHA, tag or branch name of your choice
 
 `devserver$ sudo vim environments/[dev|qa]/hiera/common.json`
 
