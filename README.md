@@ -90,11 +90,11 @@ devserver$ sudo git clone git://github.com/CUL-DigitalServices/grasshopper-puppe
 devserver$ cd /opt/grasshopper-puppet
 ```
 
-Now edit `common.json`:
+Now edit the right `common.json` for your chosen environment (`dev`/`qa`):
 * to make `tenant_hostname` match your new server's hostname
 * to change git config to match a tag if appropriate
 
-`devserver$ sudo vim environments/dev/hiera/common.json`
+`devserver$ sudo vim environments/[dev|qa]/hiera/common.json`
 
 Copy some timetable data to import onto the server:
 
@@ -103,7 +103,7 @@ Copy some timetable data to import onto the server:
 Back to the server to run puppet. **Take note** of the puppet command line displayed at the end, you may find it useful later.
 This puppet step could take **at least 60 mins** if you have a slow server and lots of data to import!
 
-`devserver$ sudo ./provisioning/grasshopper/init.sh`
+`devserver$ sudo ./provisioning/grasshopper/init.sh [dev|qa]`
 
 *Optional: only on environments like `dev` where `ghservice::apache::enable_basic_auth` is `true`:*
 * *Set username and password to protect externally visible server with play data in:*

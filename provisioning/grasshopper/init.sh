@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+PUPPET_ENV=$1
+
+if [[ X"" = X"$PUPPET_ENV" ]]; then
+  echo "Usage: $0 environmentname"
+  echo "  See environments directory for a list of valid environment names."
+  exit 0;
+fi
+
 # Include the Puppet APT repository
 echo "Fetching Puppet"
 cd /tmp
@@ -18,7 +26,6 @@ fi
 
 PUPPET_REPO_DIR=/opt/grasshopper-puppet
 PROVIS_DIR=${PUPPET_REPO_DIR}/provisioning
-PUPPET_ENV=dev
 
 ${PROVIS_DIR}/common.sh ${PUPPET_REPO_DIR} ${PROVIS_DIR}/grasshopper/hiera.yaml ${PUPPET_ENV} "Run this command:"
 
