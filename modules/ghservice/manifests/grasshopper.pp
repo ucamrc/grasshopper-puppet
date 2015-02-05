@@ -13,10 +13,6 @@ class ghservice::grasshopper {
         revision => 'master'
     })
 
-    $web_domain = hiera('web_domain')
-    $app_admin_tenant = hiera('app_admin_tenant', 'admin')
-    $admin_domain = "${app_admin_tenant}.${web_domain}"
-
     class { '::grasshopper':
         app_root_dir                  => hiera('app_root_dir'),
 
@@ -27,7 +23,7 @@ class ghservice::grasshopper {
         os_group                      => hiera('app_os_group'),
 
         config_cookie_secret          => hiera('app_cookie_secret'),
-        config_servers_admin_host     => $admin_domain,
+        config_servers_admin_host     => hiera('admin_hostname'),
         config_ui_path                => hiera('app_ui_path', '/opt/grasshopper-ui')
     }
 }

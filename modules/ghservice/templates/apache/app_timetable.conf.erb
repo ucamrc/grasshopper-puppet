@@ -1,0 +1,87 @@
+    ##
+    ## We control as much as possible in this Apache config fragment
+    ## but the first couple of directives are generated automatically
+    ## by puppetlabs-apache module
+    ##
+
+    ## Keep this file in sync with this grunt template:
+    ## https://github.com/CUL-DigitalServices/grasshopper-ui/blob/master/apps/timetable/apache/app.conf
+
+    # ----------------------------------------------------------------------
+    # Logging Settings
+    # ----------------------------------------------------------------------
+
+    ErrorLog /var/log/apache2/logstimetable_error.log
+    CustomLog /var/log/apache2/logstimetable_custom.log common
+
+
+    # ----------------------------------------------------------------------
+    # ProxyPass Directives
+    # ----------------------------------------------------------------------
+
+    # Proxy api calls to the application server
+    ProxyPass /api http://localhost:2001/api retry=0
+    ProxyPassReverse /api http://localhost:2001/api
+    ProxyPreserveHost On
+
+
+    # ----------------------------------------------------------------------
+    # General Directives
+    # ----------------------------------------------------------------------
+
+    # Shared files
+    Alias /shared <%= @path_shared %>
+
+    # App files
+    Alias /apps <%= @path_apps %>
+
+    # Tenant Admin
+    Alias /admin <%= @path_timetable_admin %>
+
+    # QUnit tests
+    Alias /qunit /opt/grasshopper-ui/tests/qunit
+    <Directory /opt/grasshopper-ui/tests/qunit>
+        Options Indexes FollowSymLinks
+        Order Allow,Deny
+        Allow from All
+
+        RewriteEngine On
+        RewriteBase /qunit
+        RewriteRule ^api\.(.*)$ /opt/grasshopper-ui/tests/qunit/tests/api.$1.html
+    </Directory>
+
+    RewriteEngine On
+    RewriteRule ^/notfound$     <%= @path_shared %>/gh/errors/404.html
+    RewriteRule ^/unavailable$  <%= @path_shared %>/gh/errors/503.html
+
+
+    # ----------------------------------------------------------------------
+    # Error Documents
+    # ----------------------------------------------------------------------
+
+    ErrorDocument 401 /shared/gh/errors/401.html
+    ErrorDocument 404 /shared/gh/errors/404.html
+    ErrorDocument 503 /shared/gh/errors/503.html
+
+
+
+    # ----------------------------------------------------------------------
+
+
+    ## ---------------------------------------------------------------------
+    ## Extra configuration provided by this puppet deployment
+
+    Alias /robots.txt <%= @path_robotstxt %>
+
+<% if @enable_basic_auth == "true" -%>
+    <Directory />
+        AuthType basic
+        AuthName "Grasshopper Dev Server (Tenant)"
+        AuthUserFile /etc/apache2/dev_auth_file
+        Require valid-user
+    </Directory>
+<% end -%>
+
+    ##
+    ## End custom fragment
+    ##

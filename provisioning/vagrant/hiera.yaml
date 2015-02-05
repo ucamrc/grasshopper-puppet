@@ -1,0 +1,6 @@
+:backends:
+  - json
+:json:
+  :datadir: /vagrant/environments/%{::environment}/hiera
+:hierarchy:
+  - common

@@ -1,5 +1,5 @@
 # Upstart script for the Node.JS Grasshopper app sever.
-description "start and stop Grasshopper"
+description "Grasshopper node.js server"
 
 start on (local-filesystems and net-device-up IFACE=eth0)
 stop on shutdown

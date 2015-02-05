@@ -20,8 +20,17 @@ class grasshopper (
     $config_cookie_secret,
     $config_servers_admin_host,
 
+    # DB
+    $config_db_name = hiera('ghservice::postgresql::db'),
+    $config_db_user = hiera('ghservice::postgresql::user'),
+    $config_db_pass = hiera('ghservice::postgresql::pass'),
+
+    # Initialisation
+    $ensure_tenant_admin_created = "true",
+
     # UI
-    $config_ui_path = '/opt/grasshopper-ui') {
+    $config_ui_path = '/opt/grasshopper-ui'
+  ) {
 
 
   ##################
@@ -59,9 +68,24 @@ class grasshopper (
     content =>  template('grasshopper/upstart_grasshopper.conf.erb'),
   }
 
-  ## service { 'grasshopper':
-  ##  ensure   => running,
-  ##  provider => 'upstart',
-  ##  require  => File['/etc/init/grasshopper.conf', "${app_root_dir}/config.js"]
-  ## }
+  $admin_hostname = hiera('admin_hostname')
+  $tenant_hostname = hiera('tenant_hostname')
+
+  class { 'grasshopper::setup':
+    app_root_dir     => $app_root_dir,
+    admin_hostname   => $admin_hostname,
+    tenant_hostname  => $tenant_hostname,
+    admin_test_url   => "${admin_hostname}:2000/api/me",
+    tenant_test_url  => "${tenant_hostname}:2001/api/me",
+    tenant_login_url => "${tenant_hostname}:2001/api/auth/login",
+    require          => [ File['/etc/init/grasshopper.conf', "${app_root_dir}/config.js"] , Class['ghservice::postgresql'] ]
+  } ->
+
+  service { 'grasshopper':
+    ensure   => running,
+    provider => 'upstart',
+    require  => [ File['/etc/init/grasshopper.conf', "${app_root_dir}/config.js"] , Class['ghservice::postgresql'] ]
+  }
+
+
 }

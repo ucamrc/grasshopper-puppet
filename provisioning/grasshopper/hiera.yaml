@@ -1,0 +1,11 @@
+:backends:
+  - json
+:json:
+  :datadir: /opt/grasshopper-puppet/environments/%{::environment}/hiera
+:hierarchy:
+  - "%{::clientcert}_hiera_secure"
+  - "%{::clientcert}"
+  - "%{nodetype}_hiera_secure"
+  - "%{nodetype}"
+  - common_hiera_secure
+  - common

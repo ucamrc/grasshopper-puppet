@@ -8,6 +8,61 @@ Puppet configuration and environment management for the Grasshopper event engine
  * If you make changes to the backend code you will need to restart the app server. This can be done by ssh'ing into the client machine by running `service grasshopper restart`.
  * Even if you'd install all the components on your host OS, you would not be able to run the server as some of the npm modules are compiled during the provisioning step.
 
+### Dev Environment (e.g. on EC2)
+
+```
+# Provision an Ubuntu Trusty server
+# Then:
+local$ ssh devserver.ontheinternet
+devserver$ sudo apt-get update
+devserver$ sudo apt-get -y install git
+# (If you're testing puppet changes not in main master, don't forget to modify this next line!)
+devserver$ sudo git clone git://github.com/CUL-DigitalServices/grasshopper-puppet /opt/grasshopper-puppet
+devserver$ cd /opt/grasshopper-puppet
+
+# Edit common.json:
+# - to make tenant_hostname match your new server's hostname
+# - to change git config to match a tag if appropriate
+devserver$ sudo vim environments/dev/hiera/common.json
+
+# Copy some timetable data to import onto the server
+local$ scp timetabledata.json devserver.ontheinternet:/tmp/timetabledata.json
+
+# Back to the server to run puppet
+# This next step could take up to around 60mins if you have a slow server and lots of data to import!
+# Take note of the puppet command line displayed at the end, you may find it useful later
+devserver$ sudo ./provisioning/grasshopper/init.sh
+
+# Set username and password to protect externally visible server with play data in
+# (This only applies in environments where ghservice::apache::enable_basic_auth is true)
+devserver$ sudo htpasswd -c /etc/apache2/dev_auth_file #username#
+
+# In a web browser, try going to the hostname you entered into common.json above
+# It should show you the Student UI!
+
+# You can monitor grasshopper's logs like this:
+devserver$ sudo tail -f /var/log/upstart/grasshopper.log
+# You can control the grasshopper server like this:
+devserver$ sudo service grasshopper [start|stop|restart]
+
+## HANDY HINT, especially for EC2 users (and similar)
+## You may want to avoid changing your hostname - either get a static IP, or don't shutdown!
+## Otherwise reconfiguring the system with a new hostname might be fiddly
+## (Have not yet tested/audited how fiddly or whether puppet will fix it all;
+##  but for instance, the setup-via-api.sh script won't know how to rename an app etc)
+
+## NOTE: you may get some of the following warnings and errors, but these can safely be ignored:
+- Warning: Setting templatedir is deprecated ...
+- Could not retrieve fact='apt_updates'...
+- Could not retrieve fact='apt_security_updates'...
+(Last two pertain to /usr/lib/update-notifier/apt-check)
+
+## If you wish to access the Global Admin (e.g. UI or Swagger Docs)
+## you will need to edit the /etc/hosts file on the client that
+## you wish to browse from. Add something like this to it:
+nn.nnn.nn.n  admin.ec2-nn-nnn-nn-n.eu-west-1.compute.amazonaws.com
+```
+
 ### Local machine / Vagrant
 
 It's possible to get Grasshopper up and running on your local machine using [Vagrant](http://www.vagrantup.com) by following these steps:
@@ -55,12 +110,14 @@ you can change this in the VagrantFile found in grasshopper/grasshopper-puppet.
 cd into the `grasshopper-puppet` directory and run:
 
 ```
-vagrant box add grashopper https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box
+vagrant box add grasshopper https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box
 vagrant up
 ```
 
 This command will pull down a VirtualBox image and deploy all the necessary components onto it.
 Depending on how fast your host machine and internet connection is, this can take quite a while. Initial set-ups of 30-45 minutes are not uncommon.
+
+(Note: this image already has puppet installed for convenience, though it will probably be an older version (3.4) than the puppet installed in the non-vagrant environments)
 
 Once that is done you should have a VM with a fully functioning environment.
 Open your browser and go to http://admin.vagrant.com and you should be presented with the Admin UI.
