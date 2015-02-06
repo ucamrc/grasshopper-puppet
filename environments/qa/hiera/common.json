@@ -43,7 +43,7 @@
     "app_install_method": "git",
     "app_install_config": {
         "source": "https://github.com/CUL-DigitalServices/grasshopper.git",
-        "revision": "aa6778632f49c148b6589cf949e6f6b29bec3d80"
+        "revision": "ccf099550f74dded246c2cee9cb91d1cc30e78d8"
     },
 
     /* Grasshopper UI repository */
@@ -51,7 +51,7 @@
     "ui_install_method": "git",
     "ui_install_config": {
         "source": "https://github.com/CUL-DigitalServices/grasshopper-ui.git",
-        "revision": "6df786cf5bd4d95c9e323586208dce3bfba9f55e"
+        "revision": "0fc9a17607d20a6b662ea3b25b7a7972f74a6538"
     },
 
     /* Node.JS version */
