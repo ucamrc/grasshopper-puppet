@@ -82,12 +82,12 @@
     Alias /robots.txt <%= @path_robotstxt %>
 
 <% if @enable_basic_auth == "true" -%>
-    <Directory />
+    <Location />
         AuthType basic
         AuthName "Grasshopper Dev Server (Global Admin)"
         AuthUserFile /etc/apache2/dev_auth_file
         Require valid-user
-    </Directory>
+    </Location>
 <% end -%>
 
     ##
