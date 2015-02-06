@@ -105,7 +105,12 @@ with the Admin UI.
 
 #### Provisioning
 
-Provision an Ubuntu Trusty server, then:
+Provision an Ubuntu Trusty server.
+
+If you need to assign it a static IP address, do this **NOW** before going
+any further. (More information about this further below).
+
+Next:
 ```
 local$ ssh devserver.ontheinternet
 devserver$ sudo apt-get update
