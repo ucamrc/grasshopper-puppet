@@ -28,8 +28,8 @@ class grasshopper::setup (
   }
 
 
+  # if file for import exists and server is responding, stop the server
   exec { 'temporarily-stop-grasshopper-for-import':
-      # if file for import exists and server is responding, stop the server
       onlyif  => "test -f /tmp/timetabledata.json && curl --fail ${admin_test_url}",
 
       # "creates => foo" is confusing puppet-speak for:
