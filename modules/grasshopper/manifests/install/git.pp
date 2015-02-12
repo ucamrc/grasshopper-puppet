@@ -12,6 +12,7 @@ class grasshopper::install::git ($install_config, $app_root_dir = '/opt/grasshop
         provider  => git,
         source    => $_install_config['source'],
         revision  => $_install_config['revision'],
+        notify    => Service['grasshopper'],
     } ->
 
     # We need to chmod the directory before we can do an npm install

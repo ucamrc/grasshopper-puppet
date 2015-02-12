@@ -1,11 +1,31 @@
 {
-    "classes": [],
+    "classes": [
+        "::localconfig::ordering",
+        "::localconfig::hostnames",
+        "::ghservice::deps::common",
+        "::ghservice::apache",
+        "::ghservice::grasshopper",
+        "::ghservice::postgresql",
+        "::ghservice::ui"
+    ],
+
+    /* Domains and hostnames */
+    "admin_hostname": "admin.%{hiera('tenant_hostname')}",
+    "tenant_hostname": "ec2-nn-nn-nn-nn.eu-west-1.compute.amazonaws.com",
+
+    // In future when we have DNS for real hostnames,
+    // one would probably want to structure domains like so:
+    // web_domain:      timetable.cam.ac.uk
+    // tenants:    2014.timetable.cam.ac.uk
+    //             2015.timetable.cam.ac.uk
+    // admin:     admin.timetable.cam.ac.uk
+    "web_domain": "not_used",
 
     /* Puppet node settings */
     "nodesuffix": "%{nodesuffix}",
     "nodetype": "%{nodetype}",
 
-    /* Generel Grasshopper application settings */
+    /* General Grasshopper application settings */
     "app_os_user": "root",
     "app_os_group": "root",
 
@@ -16,28 +36,35 @@
         "127.0.0.2"
     ],
 
+    "grasshopper::setup::tenant_appdisplayname_escaped": "My+Timetable+-+Beta",
+
     /* Grasshopper repository */
     "app_ui_path": "/opt/grasshopper-ui",
     "app_install_method": "git",
     "app_install_config": {
         "source": "https://github.com/CUL-DigitalServices/grasshopper.git",
-        "revision": "master"
+        "revision": "ccf099550f74dded246c2cee9cb91d1cc30e78d8"
     },
 
     /* Grasshopper UI repository */
     "ui_root_dir": "/opt/grasshopper-ui",
     "ui_install_method": "git",
     "ui_install_config": {
-        "source": "https://github.com/CUL-DigitalServices/avocet-ui.git",
-        "revision": "master"
+        "source": "https://github.com/CUL-DigitalServices/grasshopper-ui.git",
+        "revision": "0fc9a17607d20a6b662ea3b25b7a7972f74a6538"
     },
 
     /* Node.JS version */
-    "ghservice::deps::package::nodejs::nodejs_version": "0.10.35-1nodesource1~trusty1",
+    "ghservice::deps::nodejs::nodejs_version": "0.10.36-1nodesource1~trusty1",
+
+    /* PostgreSQL settings */
+    "ghservice::postgresql::version": "",
+    "ghservice::postgresql::db": "grasshopper",
+    "ghservice::postgresql::user": "grasshopper",
+    "ghservice::postgresql::pass": "grasshopper",
 
     /* Apache directives */
     "ghservice::apache::version": "",
+    "ghservice::apache::enable_basic_auth": "false"
 
-    /* PostGres directives */
-    "ghservice::postgresql::version": ""
 }

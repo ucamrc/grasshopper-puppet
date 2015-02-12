@@ -5,6 +5,9 @@ PUPPET_HIERA=$2
 PUPPET_ENV=$3
 MANUALRUN_PREFIX=$4
 
+# For now default to env=dev means node=dev0 etc
+PUPPET_NODENAME="${PUPPET_ENV}0"
+
 cd ${PUPPET_REPO_DIR}
 
 # Install cURL
@@ -18,7 +21,7 @@ fi
 # Enable multiverse repositories
 echo "Enable multiverse repositories"
 sed -i "/^# deb.*multiverse/ s/^# //" /etc/apt/sources.list
-#apt-get update
+# No need to "apt-get update" as puppetlabs-apt will do it for us
 
 # Make sure all the submodules have been pulled down
 cd ${PUPPET_REPO_DIR}
@@ -28,9 +31,8 @@ sh bin/pull.sh
 cp ${PUPPET_HIERA} /etc/puppet/hiera.yaml
 
 # Run puppet
-
 PUPPET_EXTRA_OPTS="--verbose"
-PUPPET_CMD="puppet apply ${PUPPET_EXTRA_OPTS} --modulepath environments/${PUPPET_ENV}/modules:modules:/etc/puppet/modules --certname dev0 --environment ${PUPPET_ENV} --hiera_config /etc/puppet/hiera.yaml site.pp"
+PUPPET_CMD="puppet apply ${PUPPET_EXTRA_OPTS} --modulepath environments/${PUPPET_ENV}/modules:modules:/etc/puppet/modules --certname ${PUPPET_NODENAME} --environment ${PUPPET_ENV} --hiera_config /etc/puppet/hiera.yaml site.pp"
 
 echo "Applying puppet catalog. This might take a while (~30+ mins is not unreasonable)"
 ${PUPPET_CMD}

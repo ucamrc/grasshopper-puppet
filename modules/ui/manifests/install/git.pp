@@ -11,5 +11,6 @@ class ui::install::git ($install_config, $ui_root_dir = '/opt/grasshopper-ui') {
         provider  => git,
         source    => $_install_config['source'],
         revision  => $_install_config['revision'],
+        notify    => Service['grasshopper'],
     }
 }

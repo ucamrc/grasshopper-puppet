@@ -35,7 +35,7 @@ class ghservice::apache (
     $path_robotstxt         = '/var/www/robots.txt'
 
     file { $path_robotstxt:
-       source => 'puppet:///modules/ghservice/robots.txt.disallowall'
+        source => 'puppet:///modules/ghservice/robots.txt.disallowall'
     }
 
     # VirtualHosts are loaded in alphabetical order;
