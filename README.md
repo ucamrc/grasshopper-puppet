@@ -125,7 +125,7 @@ Now edit the right `common.json` for your chosen environment (`dev`/`qa`):
 * review the two git `revision`s under `app_install_config`: if appropriate,
   edit each to a commit SHA, tag or branch name of your choice
 
-`devserver$ sudo vim environments/[dev|qa]/hiera/common.json`
+`devserver$ sudo vim environments/[dev or qa]/hiera/common.json`
 
 Copy some timetable data to import onto the server:
 
