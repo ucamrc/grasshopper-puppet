@@ -14,6 +14,9 @@ class ghservice::apache (
     class { '::apache::mod::proxy': }
     class { '::apache::mod::proxy_http': }
     class { '::apache::mod::rewrite': }
+    if hiera('enable_shib', 'false') == 'true' {
+      class { '::apache::mod::shib': }
+    }
 
     $admin_servername = hiera('admin_hostname')
     $tenant_servername = hiera('tenant_hostname')
