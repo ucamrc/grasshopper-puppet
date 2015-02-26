@@ -1,0 +1,63 @@
+    ##
+    ## We control as much as possible in this Apache config fragment
+    ## but the first couple of directives are generated automatically
+    ## by puppetlabs-apache module
+    ##
+
+    ## This file is loosely based on:
+    ## https://github.com/CUL-DigitalServices/grasshopper/blob/master/etc/apache/shib.conf
+
+    # ----------------------------------------------------------------------
+    # Logging Settings
+    # ----------------------------------------------------------------------
+
+    ErrorLog /var/log/apache2/logsshibsp_error.log
+    CustomLog /var/log/apache2/logsshibsp_custom.log common
+
+
+    # ----------------------------------------------------------------------
+    # ProxyPass Directives
+    # ----------------------------------------------------------------------
+
+    # Only proxy the relevant Shibboleth calls to the application server
+    ProxyPass /api/auth/shibboleth http://localhost:2001/api/auth/shibboleth retry=0
+    ProxyPassReverse /api/auth/shibboleth http://localhost:2001/api/auth/shibboleth
+    ProxyPreserveHost On
+
+
+    # ----------------------------------------------------------------------
+    # General Directives
+    # ----------------------------------------------------------------------
+
+    # When a user hits anything at /Shibboleth.sso, that should go through mod_shib
+    <Location /Shibboleth.sso>
+        SetHandler shib
+        Require all granted
+    </Location>
+
+    # When a user returns from the Shibboleth IdP, he will hit this location block. We take the request through
+    # mod_shib so the attributes get properly converted to HTTP headers
+    <Location /api/auth/shibboleth/sp/callback>
+        AuthType shibboleth
+        ShibRequestSetting requireSession 1
+
+####################################
+# https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPSpoofChecking#NativeSPSpoofChecking-Apache
+# THIS IS APPARENTLY NOT RECOMMENDED:
+        ShibUseHeaders On
+        ShibUseEnvironment Off
+####################################
+
+        Require valid-user
+    </Location>
+
+
+    # ----------------------------------------------------------------------
+    # Error Documents
+    # ----------------------------------------------------------------------
+
+    # TODO: will need to allow these docs and their dependencies!
+
+    ##
+    ## End custom fragment
+    ##

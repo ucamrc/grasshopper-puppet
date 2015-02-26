@@ -70,6 +70,28 @@ class ghservice::apache (
         custom_fragment => template('ghservice/apache/app_timetable.conf.erb'),
     }
 
+    if hiera('enable_shib', 'false') == 'true' {
+
+      $shibsp_servername = hiera('shibsp_hostname')
+      apache::vhost { 'app_shibsp':
+          priority        => 50,
+          vhost_name      => '*',
+          port            => '80',
+          servername      => $shibsp_servername,
+          docroot         => $path_timetable_docroot,
+          directories     => [
+              { 'path'      => $path_timetable_docroot,
+                'require'   => 'all denied',
+              }
+          ],
+          # We prefer to control the rest of the file ourselves
+          # so stop the module from generating other stuff
+          error_log       => false,
+          access_log      => false,
+          custom_fragment => template('ghservice/apache/app_shibsp.conf.erb'),
+      }
+    }
+
     apache::vhost { 'app_admin':
         priority        => 99,
         vhost_name      => '*',
