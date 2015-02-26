@@ -16,6 +16,7 @@ class ghservice::apache (
     class { '::apache::mod::rewrite': }
     if hiera('enable_shib', 'false') == 'true' {
       class { '::apache::mod::shib': }
+      include ::ghservice::shibboleth
     }
 
     $admin_servername = hiera('admin_hostname')
