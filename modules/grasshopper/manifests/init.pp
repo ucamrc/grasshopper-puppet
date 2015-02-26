@@ -18,7 +18,9 @@ class grasshopper (
     ############
 
     $config_cookie_secret,
+    $config_signing_key,
     $config_servers_admin_host,
+    $config_servers_shibsp_host,
 
     # DB
     $config_db_name = hiera('ghservice::postgresql::db'),

@@ -23,7 +23,9 @@ class ghservice::grasshopper {
         os_group                      => hiera('app_os_group'),
 
         config_cookie_secret          => hiera('app_cookie_secret'),
+        config_signing_key            => hiera('app_signing_key'),
         config_servers_admin_host     => hiera('admin_hostname'),
+        config_servers_shibsp_host    => hiera('shibsp_hostname'),
         config_ui_path                => hiera('app_ui_path', '/opt/grasshopper-ui')
     }
 }

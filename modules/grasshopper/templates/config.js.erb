@@ -87,7 +87,7 @@ config.servers = {
     'adminHostname': '<%= @config_servers_admin_host %>',
     'adminPort': 2000,
     'appsPort': 2001,
-    'shibbolethSPHost': 'shib-sp.grasshopper.com'
+    'shibbolethSPHost': '<%= @config_servers_shibsp_host %>'
 };
 
 /**
@@ -98,5 +98,5 @@ config.servers = {
  * @property  {String}      key                     This key will be used to sign sensitive information. It's vital to the security of the system that you change this in production
  */
 config.signing = {
-    'key': 'The default signing key, please change me.'
+    'key': '<%= @config_signing_key %>'
 };
