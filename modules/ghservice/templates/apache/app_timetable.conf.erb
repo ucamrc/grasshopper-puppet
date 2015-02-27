@@ -54,8 +54,9 @@
     </Directory>
 
     RewriteEngine On
-    RewriteRule ^/notfound$     <%= @path_shared %>/gh/errors/404.html
-    RewriteRule ^/unavailable$  <%= @path_shared %>/gh/errors/503.html
+    RewriteRule ^/accessdenied$     <%= @path_shared %>/gh/errors/401.html
+    RewriteRule ^/notfound$         <%= @path_shared %>/gh/errors/404.html
+    RewriteRule ^/unavailable$      <%= @path_shared %>/gh/errors/503.html
 
 
     # ----------------------------------------------------------------------
