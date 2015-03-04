@@ -12,6 +12,7 @@
     /* Domains and hostnames */
     "admin_hostname": "admin.%{hiera('tenant_hostname')}",
     "tenant_hostname": "timetable.vagrant.com",
+    "shibsp_hostname": "shib-sp.vagrant.com",
 
     // In future when we have DNS for real hostnames,
     // one would probably want to structure domains like so:
@@ -30,6 +31,7 @@
     "app_os_group": "root",
 
     "app_cookie_secret": "SODIFJ984FJA984JAFP98WF4PAW984F984FJ9",
+    "app_signing_key": "f6f49066892ba4e7ef3cf9a5f9f32edc37bf8",
     "app_root_dir": "/opt/grasshopper",
     "app_hosts": [
         "127.0.0.1",
@@ -57,6 +59,9 @@
 
     /* Apache directives */
     "ghservice::apache::version": "",
-    "ghservice::apache::enable_basic_auth": "false"
+    "ghservice::apache::enable_basic_auth": "false",
+
+    /* Shibboleth settings */
+    "enable_shib": "true"
 
 }
