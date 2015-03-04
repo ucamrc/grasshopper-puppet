@@ -86,6 +86,12 @@
     </Location>
 <% end -%>
 
+    # mod_shib enables /Shibboleth.sso for all hosts but we only need it on
+    # the shib-sp host, so deny it on this host to save confusion
+    <Location /Shibboleth.sso>
+      Require all denied
+    </Location>
+
     ##
     ## End custom fragment
     ##
