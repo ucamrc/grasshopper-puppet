@@ -1,45 +1,41 @@
 <!--
-The file below is a puppet-templated version of the TestShib-generated shibboleth2.xml example file.
-(See https://www.testshib.org/configure.html)
-N.B. I have also changed https to http.
+  This template is inspired by two publicly available example files:
+  * The TestShib-generated shibboleth2.xml example [0]
+  * The Shibboleth/Raven documentation from the University of Cambridge [1]
+
+  [0] See https://www.testshib.org/configure.html
+  [1] Version 1.0 2013-08-05 of
+      http://raven.cam.ac.uk/project/shibboleth/files/config/shibboleth2.xml-UCAMSKEL-2.5
+      as described on
+      https://wiki.cam.ac.uk/raven/Shibboleth2.xml_-_internal_use_skeleton
+
+  Useful documentation:
+  https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPConfiguration
 -->
-<!--
-This is an example shibboleth2.xml generated for you by TestShib.  It's reduced and recommended
-specifically for testing.  You don't need to change anything, but you may want to explore the file
-to learn about how your SP works.  Uncomment attributes in your attribute-map.xml file to test them.
+<SPConfig xmlns="urn:mace:shibboleth:2.0:native:sp:config"
+    xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+    clockSkew="<%= @clock_skew %>">
 
-If you want to test advanced functionality, start from the distribution shibboleth2.xml and add the
-MetadataProvider, the right entityID, and a properly configured SSO element.  More information:
+    <!-- InProcess and RequestMapper tags are not required for Apache -->
 
-https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPConfiguration
--->
-
-<SPConfig xmlns="urn:mace:shibboleth:2.0:native:sp:config" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
-    clockSkew="1800">
-
-    <!-- The entityID is the name TestShib made for your SP. -->
-    <ApplicationDefaults entityID="http://<%= @shibsp_hostname %>/shibboleth"
+    <ApplicationDefaults entityID="<%= @sp_entityid %>"
         REMOTE_USER="eppn">
 
         <!-- You should use secure cookies if at all possible.  See cookieProps in this Wiki article. -->
         <!-- https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPSessions -->
-        <Sessions lifetime="28800" timeout="3600" checkAddress="false" relayState="ss:mem" handlerSSL="false">
+        <Sessions lifetime="28800" timeout="3600" checkAddress="false"
+            handlerURL="/Shibboleth.sso" handlerSSL="false" cookieProps="http" relayState="ss:mem"
+            idpHistory="false" idpHistoryDays="7">
 
-            <!-- Triggers a login request directly to the TestShib IdP. -->
+            <!-- Triggers a login request directly to IdP. -->
             <!-- https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPServiceSSO -->
-            <SSO entityID="https://idp.testshib.org/idp/shibboleth">
+            <SSO entityID="<%= @idp_entityid %>">
                 SAML2 SAML1
             </SSO>
 
             <!-- SAML and local-only logout. -->
             <!-- https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPServiceLogout -->
             <Logout>SAML2 Local</Logout>
-
-            <!--
-                Handlers allow you to interact with the SP and gather more information.  Try them out!
-                Attribute values received by the SP through SAML will be visible at:
-                http://<%= @shibsp_hostname %>/Shibboleth.sso/Session
-            -->
 
             <!-- Extension service that generates "approximate" metadata based on SP configuration. -->
             <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
@@ -48,7 +44,7 @@ https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPConfiguration
             <Handler type="Status" Location="/Status" acl="127.0.0.1"/>
 
             <!-- Session diagnostic service. -->
-            <Handler type="Session" Location="/Session" showAttributeValues="true"/>
+            <Handler type="Session" Location="/Session" showAttributeValues="<%= @session_handler_show_attribute_values %>"/>
 
             <!-- JSON feed of discovery information. -->
             <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
@@ -56,24 +52,34 @@ https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPConfiguration
         </Sessions>
 
         <!-- Error pages to display to yourself if something goes horribly wrong. -->
+        <!--
+        Allows overriding of error template information/filenames. You can
+        also add attributes with values that can be plugged into the templates.
+        -->
         <Errors supportContact="root@localhost" logoLocation="/shibboleth-sp/logo.jpg" 
                 styleSheet="/shibboleth-sp/main.css"/>
 
-        <!-- Loads and trusts a metadata file that describes only the Testshib IdP and how to communicate with it. -->
-        <MetadataProvider type="XML" uri="http://www.testshib.org/metadata/testshib-providers.xml"
-             backingFilePath="testshib-two-idp-metadata.xml" reloadInterval="180000" />
+        <!-- Loads and trusts a metadata file that describes the IdP and how to communicate with it. -->
+        <MetadataProvider type="XML"
+            uri="<%= @idp_metadata_uri %>"
+            backingFilePath="<%= @idp_metadata_localfile %>"
+            reloadInterval="14400" />
 
-        <!-- Attribute and trust options you shouldn't need to change. -->
-        <AttributeExtractor type="XML" validate="true" path="attribute-map.xml"/>
+        <!-- Map to extract attributes from SAML assertions. -->
+        <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="attribute-map.xml"/>
+
+        <!-- Use a SAML query if no attributes are supplied during SSO. -->
         <AttributeResolver type="Query" subjectMatch="true"/>
+
+        <!-- Default filtering policy for recognized attributes, lets other data pass. -->
         <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
 
-        <!-- Your SP generated these credentials.  They're used to talk to IdP's. -->
+        <!-- Credentials used to talk to IdPs. -->
         <CredentialResolver type="File" key="sp-key.pem" certificate="sp-cert.pem"/>
 
     </ApplicationDefaults>
     
-    <!-- Security policies you shouldn't change unless you know what you're doing. -->
+    <!-- Policies that determine how to process and authenticate runtime messages. -->
     <SecurityPolicyProvider type="XML" validate="true" path="security-policy.xml"/>
 
     <!-- Low-level configuration about protocols and bindings available for use. -->
