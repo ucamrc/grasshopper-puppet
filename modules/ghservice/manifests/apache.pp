@@ -1,5 +1,7 @@
 class ghservice::apache (
-    $enable_basic_auth = "false" 
+    $enable_basic_auth = "false",
+    $enable_ssl = "false",
+    $self_signed_ssl = "false",
     ) {
 
     if $enable_basic_auth == 'true' {
@@ -18,6 +20,22 @@ class ghservice::apache (
       class { '::apache::mod::shib': }
       include ::ghservice::shibboleth
     }
+################### THIS IS NOT FINISHED - ONLY PROOF OF CONCEPT ################
+    if $self_signed_ssl == 'true' {
+      class { '::apache::mod::ssl': }
+      exec { 'mkdir -p /etc/apache2/ssl': }
+      ->
+      exec { 'openssl genrsa -out /etc/apache2/ssl/tmp.key 1024': }
+      ->
+      exec { 'openssl req -new -key /etc/apache2/ssl/tmp.key -subj "/C=GB/ST=Cambridgeshire/L=Cambridge/O=CARET TESTING Only/CN=timetable.vagrant.com/" -out /etc/apache2/ssl/tmp.csr': }
+      ->
+      exec { 'openssl x509 -in /etc/apache2/ssl/tmp.csr -out /etc/apache2/ssl/tmp.crt -req -signkey /etc/apache2/ssl/tmp.key -days 90': }
+    }
+    $main_port = $enable_ssl ? {
+      'true'  => '443',
+      default => '80',
+    }
+#################################################################################
 
     $admin_servername = hiera('admin_hostname')
     $tenant_servername = hiera('tenant_hostname')
@@ -55,7 +73,7 @@ class ghservice::apache (
     apache::vhost { 'app_timetable':
         priority        => 10,
         vhost_name      => '*',
-        port            => '80',
+        port            => $main_port,
         servername      => $tenant_servername,
         docroot         => $path_timetable_docroot,
         directories     => [

@@ -112,6 +112,14 @@
       Require all denied
     </Location>
 
+<% if @enable_ssl == "true" -%>
+    SSLEngine on
+### CHECK THIS
+    SSLOptions +StrictRequire
+    SSLCertificateFile /etc/apache2/ssl/tmp.crt
+    SSLCertificateKeyFile /etc/apache2/ssl/tmp.key
+<% end -%>
+
     ##
     ## End custom fragment
     ##
