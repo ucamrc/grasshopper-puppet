@@ -1,7 +1,9 @@
 class ghservice::apache (
     $enable_basic_auth = "false",
     $enable_ssl = "false",
+    $enable_shib = hiera('enable_shib', 'false'),
     $self_signed_ssl = "false",
+    $ssl_dir = "/etc/apache2/ssl",
     ) {
 
     if $enable_basic_auth == 'true' {
@@ -16,29 +18,50 @@ class ghservice::apache (
     class { '::apache::mod::proxy': }
     class { '::apache::mod::proxy_http': }
     class { '::apache::mod::rewrite': }
-    if hiera('enable_shib', 'false') == 'true' {
+    if $enable_shib == 'true' {
       class { '::apache::mod::shib': }
       include ::ghservice::shibboleth
     }
-################### THIS IS NOT FINISHED - ONLY PROOF OF CONCEPT ################
+
+    $admin_servername = hiera('admin_hostname')
+    $tenant_servername = hiera('tenant_hostname')
+    if $enable_shib == 'true' {
+      $shibsp_servername = hiera('shibsp_hostname')
+    }
+
+    if $enable_ssl == 'true' {
+## FIXME sort out sensible permissions
+      file { $ssl_dir:
+        ensure => "directory"
+      }
+      $path_ssl_tenant_base = "${ssl_dir}/tenant"
+      $path_ssl_admin_base = "${ssl_dir}/admin"
+      if $enable_shib == 'true' {
+        $path_ssl_shibsp_base = "${ssl_dir}/shibsp"
+      }
+    }
+
     if $self_signed_ssl == 'true' {
       class { '::apache::mod::ssl': }
-      exec { 'mkdir -p /etc/apache2/ssl': }
-      ->
-      exec { 'openssl genrsa -out /etc/apache2/ssl/tmp.key 1024': }
-      ->
-      exec { 'openssl req -new -key /etc/apache2/ssl/tmp.key -subj "/C=GB/ST=Cambridgeshire/L=Cambridge/O=CARET TESTING Only/CN=timetable.vagrant.com/" -out /etc/apache2/ssl/tmp.csr': }
-      ->
-      exec { 'openssl x509 -in /etc/apache2/ssl/tmp.csr -out /etc/apache2/ssl/tmp.crt -req -signkey /etc/apache2/ssl/tmp.key -days 90': }
+
+      ghservice::selfsignedcert { $tenant_servername:
+        basename => "tenant",
+      }
+      ghservice::selfsignedcert { $admin_servername:
+        basename => "admin",
+      }
+
+      if $enable_shib == 'true' {
+        ghservice::selfsignedcert { $shibsp_servername:
+          basename => "shibsp",
+        }
+      }
+
     }
     $main_port = $enable_ssl ? {
       'true'  => '443',
       default => '80',
     }
-#################################################################################
-
-    $admin_servername = hiera('admin_hostname')
-    $tenant_servername = hiera('tenant_hostname')
 
     $path_ui_root = hiera('ui_root_dir')
 
@@ -88,13 +111,12 @@ class ghservice::apache (
         custom_fragment => template('ghservice/apache/app_timetable.conf.erb'),
     }
 
-    if hiera('enable_shib', 'false') == 'true' {
+    if $enable_shib == 'true' {
 
-      $shibsp_servername = hiera('shibsp_hostname')
       apache::vhost { 'app_shibsp':
           priority        => 50,
           vhost_name      => '*',
-          port            => '80',
+          port            => $main_port,
           servername      => $shibsp_servername,
           docroot         => $path_timetable_docroot,
           directories     => [
@@ -113,7 +135,7 @@ class ghservice::apache (
     apache::vhost { 'app_admin':
         priority        => 99,
         vhost_name      => '*',
-        port            => '80',
+        port            => $main_port,
         servername      => $admin_servername,
         docroot         => $path_admin_docroot,
         directories     => [
