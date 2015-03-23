@@ -53,7 +53,7 @@
     },
 
     /* Node.JS version */
-    "ghservice::deps::nodejs::nodejs_version": "0.10.36-1nodesource1~trusty1",
+    "ghservice::deps::nodejs::nodejs_version": "0.10.37-1nodesource1~trusty1",
 
     /* PostgreSQL settings */
     "ghservice::postgresql::version": "",
