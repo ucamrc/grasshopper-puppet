@@ -1,4 +1,9 @@
-class ghservice::shibboleth {
+class ghservice::shibboleth (
+  # Default to IdP settings for TestShib
+  $idp_entityid = "https://idp.testshib.org/idp/shibboleth",
+  $idp_metadata_uri = "http://www.testshib.org/metadata/testshib-providers.xml",
+  $idp_metadata_localfile = "testshib-two-idp-metadata.xml",
+  ) {
 
   $shibsp_hostname = hiera('shibsp_hostname')
 
@@ -12,21 +17,11 @@ class ghservice::shibboleth {
   $session_handler_show_attribute_values = "true"
 
   ################################################
-  # IdP settings
-  ################################################
+  # IdP settings - see class parameters above
 
   # ARGH $idp_entityid MUST MATCH THE TENANT/APP CONFIG IN THE DATABASE TOO!!
   # TODO: download and review http://<shib-sp.hostname>/Shibboleth.sso/Metadata
   # Then register that SP Metadata with your IdP (e.g. Raven or TestShib)
-
-  # Raven/Shibboleth settings
-  $idp_entityid = "https://shib.raven.cam.ac.uk/shibboleth"
-  $idp_metadata_uri = "https://shib.raven.cam.ac.uk/ucamfederation-idp2-metadata.xml"
-  $idp_metadata_localfile = "ucamfederation-idp2-metadata.xml"
-  # TestShib settings
-  # $idp_entityid = "https://idp.testshib.org/idp/shibboleth"
-  # $idp_metadata_uri = "http://www.testshib.org/metadata/testshib-providers.xml"
-  # $idp_metadata_localfile = "testshib-two-idp-metadata.xml"
 
   #################################################
 
@@ -37,6 +32,7 @@ class ghservice::shibboleth {
     # This also creates /etc/shibboleth/sp-cert.pem
     creates => "/etc/shibboleth/sp-key.pem",
     notify  => Service['shibd'],
+    require => Class['::apache::mod::shib'],
   } ->
 
   file { '/etc/shibboleth/shibboleth2.xml':

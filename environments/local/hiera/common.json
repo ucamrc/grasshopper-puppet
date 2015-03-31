@@ -13,6 +13,9 @@
     "admin_hostname": "admin.%{hiera('tenant_hostname')}",
     "tenant_hostname": "timetable.vagrant.com",
     "shibsp_hostname": "shib-sp.vagrant.com",
+    // HINT for later for EC2 to avoid DNS or /etc/hosts faff:
+    // Use ip address as alternative hostname:
+//    "shibsp_hostname": "nnn.nnn.nnn.nnn",
 
     // In future when we have DNS for real hostnames,
     // one would probably want to structure domains like so:
@@ -57,9 +60,20 @@
     "ghservice::postgresql::user": "grasshopper",
     "ghservice::postgresql::pass": "grasshopper",
 
+    /* Shibboleth IdP settings */
+    // nb idp_entityid must also be set in the Grasshopper app config
+    // This will happen automatically on initial provisioning but any
+    // further changes will need to be manually synchronised in Grasshopper
+    // global admin.
+    "ghservice::shibboleth::idp_entityid" : "https://shib.raven.cam.ac.uk/shibboleth",
+    "ghservice::shibboleth::idp_metadata_uri" : "https://shib.raven.cam.ac.uk/ucamfederation-idp2-metadata.xml",
+    "ghservice::shibboleth::idp_metadata_localfile" : "ucamfederation-idp2-metadata.xml",
+
     /* Apache directives */
     "ghservice::apache::version": "",
     "ghservice::apache::enable_basic_auth": "false",
+    "ghservice::apache::enable_ssl": "true",
+    "ghservice::apache::self_signed_ssl": "true",
 
     /* Shibboleth settings */
     "enable_shib": "true"
