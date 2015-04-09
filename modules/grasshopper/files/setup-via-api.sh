@@ -28,11 +28,11 @@ curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}
 ### assume returns "id":1
 
 # CONFIGURE APP
-curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/config -X POST -d 'app=1&academicYear='$TENANTAPPACADEMICYEAR'&enableLocalAuth=true&shibIdpEntityId=&shibExternalIdAttributes=eppn+persistent-id+targeted-id&shibMapDisplayname=displayname+cn&shibMapEmail=mail+email+eppn&allowUserEventCreation=true&allowUserSerieCreation=true&googleAnalyticsTrackingId=&allowLocalAccountCreation=false&enableShibbolethAuth=false&enableGoogleAnalytics=false'
+curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/config -X POST -d 'app=1&academicYear='$TENANTAPPACADEMICYEAR'&enableLocalAuth=true&shibIdpEntityId=&shibExternalIdAttributes=eppn+persistent-id+targeted-id&shibMapDisplayname=displayname+cn&shibMapEmail=mail+email+eppn&allowUserEventCreation=true&allowUserSerieCreation=true&analyticsTrackingId=&statsd=&allowLocalAccountCreation=false&enableShibbolethAuth=false&enableAnalytics=false' || exit 1;
 
 # CREATE APP USERS (needs appId from above)
 # Student
-curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/users -X POST -d 'appId=1&displayName=Test%20Student&email=student@test.local&password=student' || exit 1;
+curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/users -X POST -d 'app=1&displayName=Test%20Student&email=student@test.local&password=student' || exit 1;
 # Admin
-curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/users -X POST -d 'appId=1&displayName=Test%20Admin&email=admin@test.local&password=admin&isAdmin=true' || exit 1;
+curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/users -X POST -d 'app=1&displayName=Test%20Admin&email=admin@test.local&password=admin1&isAdmin=true' || exit 1;
 
