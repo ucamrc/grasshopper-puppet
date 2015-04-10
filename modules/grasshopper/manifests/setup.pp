@@ -14,7 +14,7 @@ class grasshopper::setup (
       exec { 'temporarily-start-grasshopper-for-setup':
           # if server is not responding, start it
           unless  => "curl --fail ${admin_test_url}",
-          command => 'start grasshopper && sleep 5'
+          command => 'start grasshopper && sleep 30'
       } ->
       file { '/tmp/setup-via-api.sh':
           source => 'puppet:///modules/grasshopper/setup-via-api.sh'
@@ -40,7 +40,7 @@ class grasshopper::setup (
       # grasshopper unless we're actually planning to import anything.
       creates => "/opt/timetabledata.json.imported",
 
-      command => 'stop grasshopper && sleep 5',
+      command => 'stop grasshopper && sleep 30',
   } ->
 
   # If     /tmp/timetabledata.json exists
