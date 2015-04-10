@@ -74,6 +74,12 @@ class grasshopper (
   $admin_hostname = hiera('admin_hostname')
   $tenant_hostname = hiera('tenant_hostname')
 
+  $enable_shib = hiera('enable_shib', 'false')
+  $shib_idp_entity_id = $enable_shib ? {
+    'true'  => $ghservice::shibboleth::idp_entityid,
+    default => '',
+  }
+
   class { 'grasshopper::setup':
     app_root_dir     => $app_root_dir,
     admin_hostname   => $admin_hostname,
@@ -81,6 +87,7 @@ class grasshopper (
     admin_test_url   => "${admin_hostname}:2000/api/me",
     tenant_test_url  => "${tenant_hostname}:2001/api/me",
     tenant_login_url => "${tenant_hostname}:2001/api/auth/login",
+    shib_idp_entity_id => $shib_idp_entity_id,
     require          => [ File['/etc/init/grasshopper.conf', "${app_root_dir}/config.js"] , Class['ghservice::postgresql'] ]
   } ->
 
