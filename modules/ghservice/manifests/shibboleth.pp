@@ -35,14 +35,19 @@ class ghservice::shibboleth (
     require => Class['::apache::mod::shib'],
   } ->
 
+  file { '/etc/shibboleth/attribute-map.xml':
+    source => 'puppet:///modules/ghservice/shibboleth/attribute-map.xml',
+  } ->
+
   file { '/etc/shibboleth/shibboleth2.xml':
     content => template('ghservice/shibboleth/shibboleth2.xml.erb'),
-  } ~>
+  }
 
   service { 'shibd':
-    ensure   => running,
-    provider => 'upstart',
-    notify   => Service['apache2'],
+    subscribe => File['/etc/shibboleth/shibboleth2.xml','/etc/shibboleth/attribute-map.xml'],
+    ensure    => running,
+    provider  => 'upstart',
+    notify    => Service['apache2'],
   }
 
 }

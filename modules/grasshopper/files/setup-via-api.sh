@@ -17,6 +17,15 @@ if [[ X"" = X"$SHIBIDPENTITYID" ]]; then
   ENABLESHIB=false
 fi
 
+# See https://wiki.cam.ac.uk/raven/Attributes_released_by_the_Raven_IdP
+# Also note that the attributes currently come via HTTP headers that
+# have been mapped to lower-case, hence displayname not displayName
+
+# For Raven IdP, CRSid=uid
+SHIBATTRMAPID=uid+eppn+persistent-id+targeted-id
+SHIBATTRMAPDISPLAYNAME=displayname+cn
+SHIBATTRMAPEMAIL=mail+email+eppn
+
 # LOGIN
 curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/auth/login -X POST -d 'password=administrator&username=administrator' || exit 1;
 
@@ -34,7 +43,7 @@ curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}
 ### assume returns "id":1
 
 # CONFIGURE APP
-curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/config -X POST -d 'app=1&academicYear='$TENANTAPPACADEMICYEAR'&enableShibbolethAuth='$ENABLESHIB'&shibIdpEntityId='$SHIBIDPENTITYID'&enableLocalAuth=true&shibExternalIdAttributes=eppn+persistent-id+targeted-id&shibMapDisplayname=displayname+cn&shibMapEmail=mail+email+eppn&allowUserEventCreation=true&allowUserSerieCreation=true&analyticsTrackingId=&statsd=&allowLocalAccountCreation=false&enableAnalytics=false' || exit 1;
+curl -b /tmp/curlcookiejar -c /tmp/curlcookiejar -w '\nHTTP STATUS: %{http_code}\nTIME: %{time_total}\n' -e / ${ADMINHOSTNAME}:2000/api/config -X POST -d 'app=1&academicYear='$TENANTAPPACADEMICYEAR'&enableShibbolethAuth='$ENABLESHIB'&shibIdpEntityId='$SHIBIDPENTITYID'&enableLocalAuth=true&shibExternalIdAttributes='$SHIBATTRMAPID'&shibMapDisplayname='$SHIBATTRMAPDISPLAYNAME'&shibMapEmail='$SHIBATTRMAPEMAIL'&allowUserEventCreation=true&allowUserSerieCreation=true&analyticsTrackingId=&statsd=&allowLocalAccountCreation=false&enableAnalytics=false' || exit 1;
 
 if [[ X"false" = X"$ENABLESHIB" ]]; then
   # CREATE LOCAL APP USERS (needs appId from above)
