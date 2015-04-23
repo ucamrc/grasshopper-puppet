@@ -16,18 +16,6 @@ class ghservice::shibboleth (
   # May want to review this in production
   $session_handler_show_attribute_values = "true"
 
-  ################################################
-  # IdP settings - see class parameters above
-
-  # ARGH $idp_entityid MUST MATCH THE TENANT/APP CONFIG IN THE DATABASE TOO!!
-  # TODO: download and review http://<shib-sp.hostname>/Shibboleth.sso/Metadata
-  # Then register that SP Metadata with your IdP (e.g. Raven or TestShib)
-
-  #################################################
-
-
-  # IN PRODUCTION WILL PROBABLY WANT TO DO THIS MANUALLY??
-  # This will affect the SP Metadata to be registered with IdP!
   exec { "shib-keygen -h ${shibsp_hostname}":
     # This also creates /etc/shibboleth/sp-cert.pem
     creates => "/etc/shibboleth/sp-key.pem",
