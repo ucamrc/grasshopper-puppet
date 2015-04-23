@@ -20,7 +20,7 @@ Please ensure that you have read the following documents first:
 To enable Shibboleth support in these puppet scripts, include the following in your
 `environments/[env name]/hiera/common.json` file:
 
-`  "enable_shib": "true",`
+`"enable_shib": "true",`
 
 You will need to specify the following extra parameters too:
 
@@ -32,14 +32,14 @@ This MUST be different from your ordinary tenant hostname(s).
 hostname as ec2-nn-nn-nn-nn.eu-west-1.compute.amazonaws.com , and your
 Shibboleth SP hostname using its IP address nn.nn.nn.nn. For example:
 
-`  "shibsp_hostname": "nnn.nnn.nnn.nnn",`
+`"shibsp_hostname": "nnn.nnn.nnn.nnn",`
 
 However, for certain SPs, you may need to be on a certain sub-domain to obtain
 extra Shibboleth attributes (for instance, to obtain CRSid from the University
 of Cambridge's Raven IdP). If you are just testing, you can fake this locally
 by also adding the appropriate hostname to your /etc/hosts file. For example:
 
-`  "shibsp_hostname": "localonly.mysubdomain.cam.ac.uk",`.
+`"shibsp_hostname": "localonly.mysubdomain.cam.ac.uk",`.
 
 
 **IdP (Identity Provider) settings**

@@ -37,7 +37,7 @@ Once you provision the server with `enable_ssl` = `true`, the server will
 be configured to listen on BOTH http (port 80) and https (port 443); this applies
 to all the hosts. For convenience, the Apache configuration for the http server
 simply redirects to the equivalent URL on https. Note that in a multi-tenant
-situation, this will not work out-of-the-box, since these scripts only fully
-support a single tenant; the redirect will go to the tenant hostname specified
-in the configuration file.
+situation, this will not work out-of-the-box, since these scripts only provide
+partial support for more than one tenant; the redirect will go to the tenant
+hostname specified in the configuration file.
 

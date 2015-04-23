@@ -2,6 +2,14 @@
 
 Puppet configuration and environment management for the Grasshopper event engine.
 
+## Pre-requisites for advanced users
+
+For more advanced users, you may also need to read the following two documents
+BEFORE provisioning:
+
+* [README-ssl.md](README-ssl.md) - SSL (https) setup
+* [README-shibboleth.md](README-shibboleth.md) - Shibboleth setup
+
 ## Environments
 
  * The app server logs can be found at /opt/grasshopper/server.log
