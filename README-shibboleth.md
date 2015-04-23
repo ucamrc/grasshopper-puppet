@@ -17,33 +17,36 @@ Please ensure that you have read the following documents first:
 
 ## Puppet Configuration
 
-To enable Shibboleth support in puppet scripts, include the following in your
+To enable Shibboleth support in these puppet scripts, include the following in your
 `environments/[env name]/hiera/common.json` file:
 
 `  "enable_shib": "true",`
 
 You will need to specify the following extra parameters too:
 
-*Shibboleth SP tenant hostname* - This MUST be different from your ordinary
-tenant hostname(s).
+**Shibboleth SP tenant hostname: shibsp_hostname**
 
-Dev/QA Hint: If you are using EC2, you can cheat by specifying your tenant
+This MUST be different from your ordinary tenant hostname(s).
+
+*Dev/QA Hint*: If you are using EC2, you can cheat by specifying your tenant
 hostname as ec2-nn-nn-nn-nn.eu-west-1.compute.amazonaws.com , and your
-Shibboleth SP hostname using its IP address nn.nn.nn.nn. For example,
+Shibboleth SP hostname using its IP address nn.nn.nn.nn. For example:
+
 `  "shibsp_hostname": "nnn.nnn.nnn.nnn",`
 
 However, for certain SPs, you may need to be on a certain sub-domain to obtain
 extra Shibboleth attributes (for instance, to obtain CRSid from the University
 of Cambridge's Raven IdP). If you are just testing, you can fake this locally
-by also adding the appropriate hostname to your /etc/hosts file. For example,
+by also adding the appropriate hostname to your /etc/hosts file. For example:
+
 `  "shibsp_hostname": "localonly.mysubdomain.cam.ac.uk",`.
 
 
-*IdP (Identity Provider) settings*
+**IdP (Identity Provider) settings**
 
 If you do not specify any, the default settings for TestShib will apply.
 
-Settings for the University of Cambridge's Raven IdP:
+Here are the settings for the University of Cambridge's Raven IdP:
 
 ```
   "ghservice::shibboleth::idp_entityid" : "https://shib.raven.cam.ac.uk/shibboleth",
@@ -51,8 +54,8 @@ Settings for the University of Cambridge's Raven IdP:
   "ghservice::shibboleth::idp_metadata_localfile" : "ucamfederation-idp2-metadata.xml",
 ```
 
-Please note that the IdP Entity ID specified must match that configured for each
-Grasshopper Tenant - more on this below.
+Please note that the IdP Entity ID specified here must match that configured for each
+Grasshopper Tenant App - more on this below.
 
 Finally, you may need to modify `modules/ghservice/files/shibboleth/attribute-map.xml`
 in order to expose the right Shibboleth attributes to Grasshopper. The default
@@ -87,7 +90,10 @@ or via the Global Administration REST API (see Swagger API docs at
 
 You can now provision your server as described in [README.md](README.md).
 
-## Register your Service Provider (SP) with your Identify Provider (IdP)
+## Register your SP Metadata with your IdP
+
+Now you need to register your Service Provider (SP) Metadata with your
+Identity Provider (IdP):
 
 After you have provisioned your server, download your SP Metadata from the
 following URL:
