@@ -1,20 +1,24 @@
 class ghservice::shibboleth (
+  ## Identity Provider (IdP) Settings
   # Default to IdP settings for TestShib
   $idp_entityid = "https://idp.testshib.org/idp/shibboleth",
   $idp_metadata_uri = "http://www.testshib.org/metadata/testshib-providers.xml",
   $idp_metadata_localfile = "testshib-two-idp-metadata.xml",
+  ## Service Provider (SP) Settings
+  $sp_entityid = "https://${shibsp_hostname}/shibboleth",
+  $clock_skew = 180,
+  # https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPSessions
+  # You should use secure cookies if at all possible
+  $sessions_handlerssl = "true",
+  $sessions_cookieprops = "https",
+  # https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPHandler#NativeSPHandler-SessionHandler
+  # You may wish to hide attribute values if you are paranoid
+  # although in practice only the given user should be able to see this
+  $sessions_handler_show_attribute_values = "true",
   ) {
 
+  # This setting is used elsewhere (e.g. to configure Apache)
   $shibsp_hostname = hiera('shibsp_hostname')
-
-  # Reduce this in production!
-  $clock_skew = 1800
-
-  ## POSSIBLY OVERRIDE THIS??
-  $sp_entityid = "https://${shibsp_hostname}/shibboleth"
-
-  # May want to review this in production
-  $session_handler_show_attribute_values = "true"
 
   exec { "shib-keygen -h ${shibsp_hostname}":
     # This also creates /etc/shibboleth/sp-cert.pem

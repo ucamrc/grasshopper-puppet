@@ -21,10 +21,8 @@
     <ApplicationDefaults entityID="<%= @sp_entityid %>"
         REMOTE_USER="eppn">
 
-        <!-- You should use secure cookies if at all possible.  See cookieProps in this Wiki article. -->
-        <!-- https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPSessions -->
         <Sessions lifetime="28800" timeout="3600" checkAddress="false"
-            handlerURL="/Shibboleth.sso" handlerSSL="false" cookieProps="http" relayState="ss:mem"
+            handlerURL="/Shibboleth.sso" handlerSSL="<%= @sessions_handlerssl %>" cookieProps="<%= @sessions_cookieprops %>" relayState="ss:mem"
             idpHistory="false" idpHistoryDays="7">
 
             <!-- Triggers a login request directly to IdP. -->
@@ -44,7 +42,7 @@
             <Handler type="Status" Location="/Status" acl="127.0.0.1"/>
 
             <!-- Session diagnostic service. -->
-            <Handler type="Session" Location="/Session" showAttributeValues="<%= @session_handler_show_attribute_values %>"/>
+            <Handler type="Session" Location="/Session" showAttributeValues="<%= @sessions_handler_show_attribute_values %>"/>
 
             <!-- JSON feed of discovery information. -->
             <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
