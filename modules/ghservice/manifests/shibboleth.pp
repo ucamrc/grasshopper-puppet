@@ -5,7 +5,6 @@ class ghservice::shibboleth (
   $idp_metadata_uri = "http://www.testshib.org/metadata/testshib-providers.xml",
   $idp_metadata_localfile = "testshib-two-idp-metadata.xml",
   ## Service Provider (SP) Settings
-  $sp_entityid = "https://${shibsp_hostname}/shibboleth",
   $clock_skew = 180,
   # https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPSessions
   # You should use secure cookies if at all possible
@@ -19,6 +18,9 @@ class ghservice::shibboleth (
 
   # This setting is used elsewhere (e.g. to configure Apache)
   $shibsp_hostname = hiera('shibsp_hostname')
+
+  # This ID is important for uniquely identifying ourselves to the IdP
+  $sp_entityid = "https://${shibsp_hostname}/shibboleth"
 
   exec { "shib-keygen -h ${shibsp_hostname}":
     # This also creates /etc/shibboleth/sp-cert.pem
