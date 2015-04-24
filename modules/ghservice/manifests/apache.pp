@@ -1,5 +1,8 @@
 class ghservice::apache (
-    $enable_basic_auth = "false" 
+    $enable_basic_auth = "false",
+    $enable_ssl = "false",
+    $self_signed_ssl = "false",
+    $ssl_dir = "/etc/apache2/ssl",
     ) {
 
     if $enable_basic_auth == 'true' {
@@ -17,6 +20,37 @@ class ghservice::apache (
 
     $admin_servername = hiera('admin_hostname')
     $tenant_servername = hiera('tenant_hostname')
+
+    if $enable_ssl == 'true' {
+      # Until puppet implement a long-standing feature request[0]
+      # we have to resort to exec mkdir -p to ensure parent dirs created
+      # [0] http://projects.puppetlabs.com/issues/86
+      exec { "mkdir -p ${ssl_dir}":
+        creates => $ssl_dir,
+      } ->
+      file { $ssl_dir:
+## FIXME sort out sensible permissions
+        ensure => "directory"
+      }
+      $path_ssl_tenant_base = "${ssl_dir}/tenant"
+      $path_ssl_admin_base = "${ssl_dir}/admin"
+    }
+
+    if $self_signed_ssl == 'true' {
+      class { '::apache::mod::ssl': }
+
+      ghservice::selfsignedcert { $tenant_servername:
+        basename => "tenant",
+      }
+      ghservice::selfsignedcert { $admin_servername:
+        basename => "admin",
+      }
+
+    }
+    $main_port = $enable_ssl ? {
+      'true'  => '443',
+      default => '80',
+    }
 
     $path_ui_root = hiera('ui_root_dir')
 
@@ -51,7 +85,7 @@ class ghservice::apache (
     apache::vhost { 'app_timetable':
         priority        => 10,
         vhost_name      => '*',
-        port            => '80',
+        port            => $main_port,
         servername      => $tenant_servername,
         docroot         => $path_timetable_docroot,
         directories     => [
@@ -67,9 +101,9 @@ class ghservice::apache (
     }
 
     apache::vhost { 'app_admin':
-        priority        => 99,
+        priority        => 80,
         vhost_name      => '*',
-        port            => '80',
+        port            => $main_port,
         servername      => $admin_servername,
         docroot         => $path_admin_docroot,
         directories     => [
@@ -82,6 +116,20 @@ class ghservice::apache (
         error_log       => false,
         access_log      => false,
         custom_fragment => template('ghservice/apache/app_admin.conf.erb'),
+    }
+
+    if $enable_ssl == 'true' {
+        # Virtual Hosts listening on port 80 that redirect to port 443 (HTTPS)
+
+        ghservice::redirecttossl { 'app_timetable_redirect_to_ssl':
+            servername => $tenant_servername,
+            priority => 90,
+        }
+
+        ghservice::redirecttossl { 'app_admin_redirect_to_ssl':
+            servername => $admin_servername,
+            priority => 91,
+        }
     }
 
 }

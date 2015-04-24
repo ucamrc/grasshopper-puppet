@@ -106,6 +106,14 @@
     </Location>
 <% end -%>
 
+<% if @enable_ssl == "true" -%>
+    SSLEngine on
+### CHECK THIS
+    SSLOptions +StrictRequire
+    SSLCertificateFile <%= @path_ssl_tenant_base %>.crt
+    SSLCertificateKeyFile <%= @path_ssl_tenant_base %>.key
+<% end -%>
+
     ##
     ## End custom fragment
     ##
