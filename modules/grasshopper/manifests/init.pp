@@ -49,13 +49,13 @@ class grasshopper (
   Class["::grasshopper::install::${install_method}"] -> File["${app_root_dir}/config.js"]
 
   # Grasshopper config file
-  file {
-    "${app_root_dir}/config.js":
-      ensure  => present,
-      mode    => "0644",
-      owner   => $os_user,
-      group   => $os_group,
-      content => template('grasshopper/config.js.erb')
+  file { "${app_root_dir}/config.js":
+    ensure  => present,
+    mode    => "0644",
+    owner   => $os_user,
+    group   => $os_group,
+    content => template('grasshopper/config.js.erb'),
+    notify  => Service['grasshopper'],
   }
 
 
@@ -64,8 +64,9 @@ class grasshopper (
   ###################
 
   file { "/etc/init/grasshopper.conf":
-    ensure  =>  present,
-    content =>  template('grasshopper/upstart_grasshopper.conf.erb'),
+    ensure  => present,
+    content => template('grasshopper/upstart_grasshopper.conf.erb'),
+    notify  => Service['grasshopper'],
   }
 
   $admin_hostname = hiera('admin_hostname')
