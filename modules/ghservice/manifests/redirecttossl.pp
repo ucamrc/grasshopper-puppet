@@ -20,9 +20,9 @@ define ghservice::redirecttossl (
         # so stop the module from generating other stuff
         logroot         => "${logroot}",
         error_log       => true,
-        error_log_file  => "logs${$title}-redirect_error.log",
+        error_log_file  => "logs${$title}_error.log",
         access_log      => true,
-        access_log_file => "logs${$title}-redirect_custom.log",
+        access_log_file => "logs${$title}_custom.log",
         custom_fragment => "RedirectMatch Permanent (.*) https://${servername}\$1",
     }
 

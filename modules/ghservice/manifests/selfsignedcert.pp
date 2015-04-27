@@ -33,16 +33,16 @@ define ghservice::selfsignedcert (
     ->
     # Set appropriate file permissions and ownership
     file { "${keyfile}":
-        owner  => "root",
-        group  => "root",
-        mode   => "0400",
-        ensure => "file"
+      owner  => "root",
+      group  => "root",
+      mode   => "0400",
+      ensure => "file",
     }
     ->
     file { "${certfile}":
-        owner  => "root",
-        group  => "root",
-        mode   => "0400",
-        ensure => "file"
+      owner  => "root",
+      group  => "root",
+      mode   => "0400",
+      ensure => "file",
     }
 }
