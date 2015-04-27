@@ -2,6 +2,7 @@ define ghservice::redirecttossl (
     $servername,
     $priority = 90,
     $docroot = '/var/www',
+    $logroot = '/var/log/apache2',
     ) {
 
     apache::vhost { $title:
@@ -17,9 +18,11 @@ define ghservice::redirecttossl (
         ],
         # We prefer to control the rest of the file ourselves
         # so stop the module from generating other stuff
-# FIXME put logging in since no actual template
-        error_log       => false,
-        access_log      => false,
+        logroot         => "${logroot}",
+        error_log       => true,
+        error_log_file  => "logs${$title}-redirect_error.log",
+        access_log      => true,
+        access_log_file => "logs${$title}-redirect_custom.log",
         custom_fragment => "RedirectMatch Permanent (.*) https://${servername}\$1",
     }
 
