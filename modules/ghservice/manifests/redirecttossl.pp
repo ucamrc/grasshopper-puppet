@@ -16,8 +16,8 @@ define ghservice::redirecttossl (
               'require'   => 'all denied',
             }
         ],
-        # We prefer to control the rest of the file ourselves
-        # so stop the module from generating other stuff
+        # In this case we are happy to let the module generate the entire file
+        # from the parameters here, so there is no need for our own template
         logroot         => "${logroot}",
         error_log       => true,
         error_log_file  => "logs${$title}_error.log",
