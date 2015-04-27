@@ -14,7 +14,7 @@ define ghservice::selfsignedcert (
     $issuer_prefix = "/C=GB/ST=Cambridgeshire/L=Cambridge/O=TEMPORARY CERTIFICATE for TESTING only"
 
     # Generate Key
-    # WARNING: not encrypted, so that Apache can (re)start without prompting for a pass-phrase
+    # WARNING: deliberately not encrypted, so that Apache can (re)start without prompting for a pass-phrase
     exec { "openssl genrsa -out ${keyfile} 1024":
       require => [Package['openssl'], File[$certdir]],
       creates => "${certfile}",
@@ -29,5 +29,20 @@ define ghservice::selfsignedcert (
     exec { "openssl x509 -in ${csrfile} -out ${certfile} -req -signkey ${keyfile} -days ${expiredays} && rm ${csrfile}":
       creates => "${certfile}",
       notify  => Service['httpd'],
+    }
+    ->
+    # Set appropriate file permissions and ownership
+    file { "${keyfile}":
+        owner  => "root",
+        group  => "root",
+        mode   => "0400",
+        ensure => "file"
+    }
+    ->
+    file { "${certfile}":
+        owner  => "root",
+        group  => "root",
+        mode   => "0400",
+        ensure => "file"
     }
 }

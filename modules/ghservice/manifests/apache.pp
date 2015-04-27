@@ -29,7 +29,9 @@ class ghservice::apache (
         creates => $ssl_dir,
       } ->
       file { $ssl_dir:
-## FIXME sort out sensible permissions
+        owner  => "root",
+        group  => "root",
+        mode   => "0500",
         ensure => "directory"
       }
       $path_ssl_tenant_base = "${ssl_dir}/tenant"
