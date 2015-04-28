@@ -58,5 +58,8 @@
     /* Apache directives */
     "ghservice::apache::version": "",
     "ghservice::apache::enable_basic_auth": "false"
+    // See README-ssl.md for more information
+    //"ghservice::apache::enable_ssl": "true",
+    //"ghservice::apache::self_signed_ssl": "true",
 
 }
